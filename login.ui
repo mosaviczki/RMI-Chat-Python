@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>625</height>
+    <width>627</width>
+    <height>698</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,8 +20,8 @@ border-radius: 5px</string>
   <widget class="QTextEdit" name="textEdit">
    <property name="geometry">
     <rect>
-     <x>73</x>
-     <y>190</y>
+     <x>83</x>
+     <y>340</y>
      <width>491</width>
      <height>64</height>
     </rect>
@@ -34,8 +34,8 @@ border-radius: 10px;</string>
   <widget class="QTextEdit" name="textEdit_2">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>350</y>
+     <x>80</x>
+     <y>500</y>
      <width>491</width>
      <height>64</height>
     </rect>
@@ -45,38 +45,11 @@ border-radius: 10px;</string>
 border-radius: 10px;</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>40</y>
-     <width>641</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Calibri</family>
-     <pointsize>36</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: rgb(255, 255, 255)</string>
-   </property>
-   <property name="text">
-    <string>Login</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>153</y>
+     <x>90</x>
+     <y>303</y>
      <width>161</width>
      <height>31</height>
     </rect>
@@ -99,8 +72,8 @@ border-radius: 10px;</string>
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>310</y>
+     <x>80</x>
+     <y>460</y>
      <width>271</width>
      <height>31</height>
     </rect>
@@ -124,7 +97,7 @@ border-radius: 10px;</string>
    <property name="geometry">
     <rect>
      <x>70</x>
-     <y>520</y>
+     <y>600</y>
      <width>241</width>
      <height>71</height>
     </rect>
@@ -148,7 +121,7 @@ border-radius: 10px;</string>
    <property name="geometry">
     <rect>
      <x>320</x>
-     <y>520</y>
+     <y>600</y>
      <width>241</width>
      <height>71</height>
     </rect>
@@ -167,6 +140,25 @@ border-radius: 10px;
    </property>
    <property name="text">
     <string>ENTRAR</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>10</y>
+     <width>621</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>1.png</pixmap>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1350</width>
-    <height>627</height>
+    <height>701</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@ border-radius: 5px</string>
      <x>19</x>
      <y>20</y>
      <width>351</width>
-     <height>581</height>
+     <height>661</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -37,32 +37,29 @@ border-radius: 5px</string>
 border-radius: 10px;
 color: rgb(255, 255, 255);</string>
    </property>
-  </widget>
-  <widget class="QWidget" name="widget_2" native="true">
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>20</y>
-     <width>941</width>
-     <height>501</height>
-    </rect>
-   </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(102, 115, 130, 0.9);
+   <widget class="QScrollBar" name="verticalScrollBar_2">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>0</y>
+      <width>20</width>
+      <height>661</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
 border-radius: 5px</string>
-   </property>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
   </widget>
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
      <x>1220</x>
-     <y>530</y>
+     <y>610</y>
      <width>111</width>
      <height>71</height>
     </rect>
@@ -92,8 +89,8 @@ color: rgb(255,255,255);</string>
    <property name="geometry">
     <rect>
      <x>390</x>
-     <y>530</y>
-     <width>821</width>
+     <y>610</y>
+     <width>831</width>
      <height>71</height>
     </rect>
    </property>
@@ -102,10 +99,42 @@ color: rgb(255,255,255);</string>
 border-radius:10px;</string>
    </property>
   </widget>
+  <widget class="QTextEdit" name="textEdit_2">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>20</y>
+     <width>941</width>
+     <height>581</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba(102, 115, 130, 0.9);
+border-radius: 5px</string>
+   </property>
+  </widget>
+  <widget class="QScrollBar" name="verticalScrollBar">
+   <property name="geometry">
+    <rect>
+     <x>1310</x>
+     <y>20</y>
+     <width>20</width>
+     <height>581</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">
+border-radius: 5px</string>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
   <zorder>textEdit</zorder>
   <zorder>widget</zorder>
-  <zorder>widget_2</zorder>
   <zorder>pushButton</zorder>
+  <zorder>textEdit_2</zorder>
+  <zorder>verticalScrollBar</zorder>
  </widget>
  <resources/>
  <connections/>
