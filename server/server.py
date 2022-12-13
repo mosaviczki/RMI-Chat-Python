@@ -25,6 +25,12 @@ class Servidor(object):
         for user in users:
             print(user.nome, user.senha)
 
+    def login(self, nome, senha, users = usuarios):
+        for user in users:
+            if nome == user.nome and senha == user.senha:
+                return dict()
+        return False
+
 
 with Daemon() as daemon:
     print("Starting server")
