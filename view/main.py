@@ -1,4 +1,4 @@
-import sys, Pyro5
+import sys, Pyro4
 from PyQt5 import uic, QtWidgets
 from hashlib import sha256
 # senha = 

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Login</string>
+   <string>Cadastro</string>
   </property>
   <property name="styleSheet">
    <string notr="true">
@@ -184,7 +184,7 @@ border-bottom-color: rgb(199, 199, 199);</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../Usuário.png</pixmap>
+     <pixmap>img/cadastro.png</pixmap>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">

@@ -30,7 +30,7 @@ border-radius: 5px</string>
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>../../login.png</pixmap>
+    <pixmap>img/login.png</pixmap>
    </property>
   </widget>
   <widget class="QFrame" name="frame">
