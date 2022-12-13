@@ -108,9 +108,9 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>385</x>
-      <y>80</y>
-      <width>1491</width>
-      <height>761</height>
+      <y>20</y>
+      <width>1481</width>
+      <height>821</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -120,27 +120,8 @@ color: rgb(255, 255, 255);
 font: 75 14pt &quot;Candara&quot;;</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
-    <property name="geometry">
-     <rect>
-      <x>1780</x>
-      <y>20</y>
-      <width>91</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(0, 202, 202);
-font: 10pt &quot;Candara&quot;;</string>
-    </property>
-    <property name="text">
-     <string>LogOut</string>
-    </property>
-   </widget>
   </widget>
  </widget>
- <resources>
-  <include location="img.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
