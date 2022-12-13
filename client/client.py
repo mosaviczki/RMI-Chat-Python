@@ -1,10 +1,12 @@
 from Pyro4 import Daemon, Proxy, expose, oneway, callback, locateNS
+from hashlib import md5
 import threading, time
 @expose
 class Cliente(object):
     def __init__(self, nome, senha):
         self.nome = nome
         self.senha = senha
+        self.mensagens = None
         self.uri = ""
 
     def get_nome(self):
@@ -42,6 +44,9 @@ with Daemon() as daemon:
                 nome = input("Digite seu nome: ")
                 senha = input("Digite sua senha: ")
 
+                senha = md5(senha.encode())
+
+                senha = senha.hexdigest()   #Transformando em string 
 
                 callback = Cliente(nome, senha)
                 callback.uri = daemon.register(callback)

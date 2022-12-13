@@ -2,6 +2,8 @@ from Pyro4 import Daemon, Proxy, expose, oneway, callback, locateNS
 import threading
 
 
+f = open("users.txt", "w")
+
 class Usuario():
 
     def __init__(self, nome, senha, uri) -> None:
@@ -9,8 +11,6 @@ class Usuario():
         self.senha = senha
         self.uri = uri
         print(f"Usuario {nome} criado")
-
-
 
 @expose
 class Servidor(object):
@@ -20,6 +20,7 @@ class Servidor(object):
         cliente = Proxy(callback)
         usuario = Usuario(cliente.get_nome(), cliente.get_senha(),callback)
         Servidor.usuarios.append(usuario)
+        f.write(usuario.nome + ":" + usuario.senha)
 
     def show_users(self, users = usuarios):
         for user in users:
