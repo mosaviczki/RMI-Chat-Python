@@ -49,9 +49,9 @@ with Daemon() as daemon:
                     createClient = Cadastrar()
                     widget.addWidget(createClient)
                     widget.setCurrentIndex(widget.currentIndex()+1)
+                    #server.show_users()
                     
-                server.show_users()
-
+                
             class Cadastrar(QDialog):
                 def __init__(self):
                     super(Cadastrar,self).__init__()
