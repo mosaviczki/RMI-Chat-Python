@@ -31,15 +31,19 @@ with Daemon() as daemon:
             print("--------------------------------")
             print("1-Login\n2-Registrar")
             option = int(input(""))
-            """
+            
+
             if option == 1:
+
                 nome = input("Nome: ")
                 senha = input("Senha: ")
 
-                user = server.login(nome, senha)
+                cliente = Cliente(nome, senha)
 
-                print(user)
-            """
+                cliente.mensagens = server.login(cliente.nome, cliente.senha)
+
+                print(Cliente.mensagens)
+            
             if option == 2:
 
                 nome = input("Digite seu nome: ")

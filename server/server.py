@@ -6,8 +6,8 @@ class Usuario():
     def __init__(self, nome, senha) -> None:
         self.nome = nome
         self.senha = senha
+        self.mensagens = set()
         self.uri = None
-        print(f"[+] Usuario {nome} criado")
 
     def set_uri(self, uri):
         self.uri = uri
@@ -45,11 +45,18 @@ class Servidor():
     def cadastrar_usuario(self, nome, senha):
         usuario = Usuario(nome, senha)
         usuario.set_uri(daemon.register(usuario))
+        
+
+        with open('users.dat', 'r') as file:
+            for linha in file.readlines():
+                if linha.split(':')[0] == nome:
+                    return False
 
         with open('users.dat', 'a') as file:
             file.write(nome + ':' + senha + '\n')
-
         Servidor.usuarios.append(usuario)
+
+        print(f"[+] Usuario {nome} criado")
 
     def show_users(self, users = usuarios):
         print('--------------------USERS-----------------------')
@@ -58,11 +65,22 @@ class Servidor():
             print(user.nome)
             print(user.senha)
             print(user.uri)
+    
+    def mandarMensagem(self, id_rec, id_manda):
+        
+        
+        pass
+
+
+    def procura(self, id, users = usuarios):
+        for user in users:
+            if id == user.nome:
+                return user
 
     def login(self, nome, senha, users = usuarios):
         for user in users:
             if nome == user.nome and senha == user.senha:
-                return True
+                return user.mensagens
         return False
 
 
