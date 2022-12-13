@@ -1,5 +1,9 @@
-import  Pyro4
+import Pyro4
 
-o = Pyro4.Proxy('PYRO:obj_d135b791ae5f42bda5d1b9d72a466131@localhost:41345')
+ns = Pyro4.locateNS()
 
-print(o.say())
+uri = ns.lookup('obg')
+
+o = Pyro4.Proxy(uri)
+
+print(o)
