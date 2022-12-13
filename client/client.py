@@ -42,8 +42,6 @@ with Daemon() as daemon:
             """
             if option == 2:
 
-                print(server)
-
                 nome = input("Digite seu nome: ")
                 senha = input("Digite sua senha: ")
 

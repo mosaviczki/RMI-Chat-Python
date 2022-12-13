@@ -6,43 +6,48 @@ class Usuario():
     def __init__(self, nome, senha) -> None:
         self.nome = nome
         self.senha = senha
-        self.uri = uri
+        self.uri = None
         print(f"[+] Usuario {nome} criado")
 
     def set_uri(self, uri):
         self.uri = uri
 
-@expose
-class Servidor(object):
-
-
-    def _carregarUsuarios():
-        print("BB")
+  
+def carregarUsuarios():
+    try:
         with open('users.dat', 'r') as file:
             
             if len(file.read()) == 0: #Não ha nada no arquivo
                 return list()
         
             file.seek(0)
-
-            print("FOR")
+    
+            list_user = []
 
             for user in file.readlines():
-                
-                print(user)
                 user = user.split(':')
-                print(user[0], user[1])
-                
-                #self.cadastrar_cliente(user[0], user[1])
+                nome = user[0]
+                senha = user[1]
 
-        return list()   
+                usuario = Usuario(nome, senha)
+                usuario.set_uri(Daemon().register(usuario))
+                list_user.append(usuario)
+            
+            return list_user
+    except FileNotFoundError:
+        return list()
 
-    usuarios = _carregarUsuarios()
-    print(usuarios)
+@expose
+class Servidor():
+    
+    usuarios = carregarUsuarios()
 
     def cadastrar_usuario(self, nome, senha):
         usuario = Usuario(nome, senha)
         usuario.set_uri(daemon.register(usuario))
+
+        with open('users.dat', 'a') as file:
+            file.write(nome + ':' + senha + '\n')
 
         Servidor.usuarios.append(usuario)
 
