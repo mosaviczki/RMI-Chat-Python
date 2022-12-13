@@ -41,21 +41,16 @@ with Daemon() as daemon:
                 print(user)
             """
             if option == 2:
+
+                print(server)
+
                 nome = input("Digite seu nome: ")
                 senha = input("Digite sua senha: ")
 
                 senha = md5(senha.encode())
-
                 senha = senha.hexdigest()   #Transformando em string 
 
-                callback = Cliente(nome, senha)
-                callback.uri = daemon.register(callback)
-
-                loop_thread = threading.Thread(target=callback.request_loop, args=(daemon, ))
-                loop_thread.daemon = False
-                loop_thread.start()
-
-                server.cadastrar_cliente(callback.uri)
+                server.cadastrar_usuario(nome, senha)
 
             if option == 3:
                 server.show_users()
