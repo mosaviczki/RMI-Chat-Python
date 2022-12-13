@@ -38,8 +38,8 @@ border-radius: 5px</string>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>1270</x>
-      <y>840</y>
+      <x>1180</x>
+      <y>830</y>
       <width>231</width>
       <height>71</height>
      </rect>
@@ -65,7 +65,7 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>750</x>
-      <y>90</y>
+      <y>170</y>
       <width>1041</width>
       <height>61</height>
      </rect>
@@ -103,7 +103,7 @@ border-bottom-color: rgb(199, 199, 199);</string>
     <property name="geometry">
      <rect>
       <x>750</x>
-      <y>50</y>
+      <y>130</y>
       <width>221</width>
       <height>41</height>
      </rect>
@@ -120,7 +120,7 @@ color: rgb(197, 197, 197);</string>
     <property name="geometry">
      <rect>
       <x>750</x>
-      <y>260</y>
+      <y>360</y>
       <width>221</width>
       <height>51</height>
      </rect>
@@ -137,7 +137,7 @@ color: rgb(197, 197, 197);</string>
     <property name="geometry">
      <rect>
       <x>750</x>
-      <y>310</y>
+      <y>400</y>
       <width>1041</width>
       <height>61</height>
      </rect>
@@ -158,10 +158,10 @@ border-bottom-color: rgb(199, 199, 199);</string>
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>940</x>
-      <y>670</y>
-      <width>151</width>
-      <height>61</height>
+      <x>740</x>
+      <y>660</y>
+      <width>181</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="styleSheet">

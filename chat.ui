@@ -38,9 +38,9 @@ border-radius: 5px</string>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>1270</x>
-      <y>840</y>
-      <width>231</width>
+      <x>1760</x>
+      <y>850</y>
+      <width>111</width>
       <height>71</height>
      </rect>
     </property>
@@ -64,10 +64,10 @@ color: rgb(255, 255, 255);</string>
    <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>90</y>
-      <width>1041</width>
-      <height>61</height>
+      <x>380</x>
+      <y>840</y>
+      <width>1371</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="font">
@@ -83,93 +83,58 @@ border-color: rgb(23, 20, 52);
 border-bottom-color: rgb(199, 199, 199);</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>-10</y>
-      <width>541</width>
-      <height>981</height>
+      <x>20</x>
+      <y>20</y>
+      <width>351</width>
+      <height>901</height>
      </rect>
     </property>
-    <property name="text">
-     <string/>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
-    <property name="pixmap">
-     <pixmap>../../login.png</pixmap>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(64, 72, 81, 0.5);
+border-radius: 10px;
+color: rgb(255, 255, 255);</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QTextBrowser" name="textBrowser">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>50</y>
-      <width>221</width>
-      <height>41</height>
+      <x>385</x>
+      <y>40</y>
+      <width>1481</width>
+      <height>801</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 18pt &quot;Cambria&quot;;
-color: rgb(197, 197, 197);</string>
-    </property>
-    <property name="text">
-     <string>USUARIO</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>750</x>
-      <y>260</y>
-      <width>221</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 18pt &quot;Cambria&quot;;
-color: rgb(197, 197, 197);</string>
-    </property>
-    <property name="text">
-     <string>SENHA</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
-    <property name="geometry">
-     <rect>
-      <x>750</x>
-      <y>310</y>
-      <width>1041</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Candara</family>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);
-border:5px solid;
-border-color: rgb(23, 20, 52);
-border-bottom-color: rgb(199, 199, 199);</string>
+     <string notr="true">background-color: rgba(64, 56, 147, 0.4);
+border-radius: 10px;
+color: rgb(255, 255, 255);
+font: 75 14pt &quot;Candara&quot;;</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>940</x>
-      <y>670</y>
-      <width>151</width>
-      <height>61</height>
+      <x>1730</x>
+      <y>0</y>
+      <width>131</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(0, 185, 185);
-font: 15pt &quot;Cambria&quot;;</string>
+     <string notr="true">font: 18pt &quot;Cambria&quot;;
+color: rgb(0, 176, 176);</string>
     </property>
     <property name="text">
-     <string>CADASTRE-SE</string>
+     <string>Voltar</string>
     </property>
    </widget>
   </widget>
