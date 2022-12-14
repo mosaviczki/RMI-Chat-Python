@@ -42,7 +42,7 @@ with Daemon() as daemon:
 
         while True: 
             print("--------------------------------")
-            print("1-Login\n2-Registrar\n3-Mandar mesagem\n4-Mostrar Cliente\n5-Carregar mensagens")
+            print("1-Login\n2-Registrar\n3-Mandar mesagem\n4-Mostrar Cliente\n5-Carregar mensagens\n6-Enviar arquivo")
             option = int(input(""))
             
             if option == 1:
@@ -100,12 +100,20 @@ with Daemon() as daemon:
                     cliente.show()    
 
             if option == 5:       
-
                 user = Proxy(cliente.uriUser)
                 for arq in user.get_mensagens():
                     msgs = server.carregarMensagens(arq)
                     print(msgs)
 
             if option == 6:
+                arq = open('fto.png', 'rb')
+
+                arqNome = arq.name
+                arqBuffer = arq.read()
+
+                callback = cliente
+                server.enviarArquivo(callback.uri, arqNome, arqBuffer)
+            
+
+            if option == 8:
                 server.show_users()
-    

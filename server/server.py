@@ -1,4 +1,5 @@
 from Pyro4 import Daemon, Proxy, expose, oneway, callback, locateNS
+from serpent import tobytes
 from datetime import datetime
 from hashlib import md5
 from os import mkdir
@@ -192,16 +193,17 @@ class Servidor():
         lines = file.readlines()
         return lines
 
-    def enviarArquivo(self, callback):
-        
+    def enviarArquivo(self, callback, nome, buffer):      
         cliente = Proxy(callback)
 
-        print(cliente.get_arquivo())
-'''
-        arq = open(nome, 'wb')
+        buffer = tobytes(buffer)
+
+        arq = open('./'+ cliente.get_nome() + '/' + nome, 'wb')
         arq.write(buffer)
         arq.close()
-'''
+
+        cliente.notificar('Arquivo enviado com sucesso!')
+
 
 print("[+] Starting server")
 ns = locateNS()
