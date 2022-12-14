@@ -3,6 +3,9 @@ from datetime import datetime
 from hashlib import md5
 import threading
 
+daemon = Daemon()
+
+@expose
 class Usuario():
 
     def __init__(self, nome, senha) -> None:
@@ -13,6 +16,15 @@ class Usuario():
 
     def set_uri(self, uri):
         self.uri = uri
+
+    def get_uri(self):
+        return self.uri
+    
+    def get_mensagens(self):
+        return self.mensagens
+    
+    def hello(self):
+        return "hello"
 
   
 def carregarUsuarios():
@@ -40,7 +52,13 @@ def carregarUsuarios():
                         msg = msg.replace('\n', '')
                         usuario.mensagens.add(msg)
             
-                usuario.set_uri(Daemon().register(usuario))
+                ns = locateNS()
+
+                uri = daemon.register(usuario)
+                usuario.set_uri(uri)
+                
+                ns.register(usuario.nome, uri)
+                
                 list_user.append(usuario)
             
             return list_user
@@ -53,8 +71,13 @@ class Servidor():
     usuarios = carregarUsuarios()
 
     def cadastrar_usuario(self, nome, senha):
+        ns = locateNS()
+
         usuario = Usuario(nome, senha)
-        usuario.set_uri(daemon.register(usuario))
+        uri = daemon.register(usuario)
+        usuario.set_uri(uri)
+        
+        ns.register(nome, uri)
         
         try:
             with open('users.dat', 'r') as file:
@@ -126,8 +149,7 @@ class Servidor():
 
 
 
-    def vrfHash(self, id, hsh_recebido):
-        
+    def vrfHash(self, id, hsh_recebido):  
         with open('users.dat', 'r') as file:
             for linha in file.readlines():
                 if linha.split(':')[0] == id:
@@ -146,19 +168,25 @@ class Servidor():
 
     def login(self, nome, senha, users = usuarios):
         for user in users:
+            user.senha = user.senha.replace('\n', '')
+
             if nome == user.nome and senha == user.senha:
-                return user.mensagens
-        return False
+                return user.uri
+        return None
+
+    def carregarMensagens(self, arq_nome):
+        pass
 
 
-with Daemon() as daemon:
-    print("[+] Starting server")
-    ns = locateNS()
-    server = Servidor()
-    uri = daemon.register(server)
-    ns.register("RMI", uri)
 
-    print(uri)
 
-    daemon.requestLoop()
+print("[+] Starting server")
+ns = locateNS()
+server = Servidor()
+uri = daemon.register(server)
+ns.register("RMI", uri)
+
+print(uri)
+
+daemon.requestLoop()
     

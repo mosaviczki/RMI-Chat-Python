@@ -6,8 +6,7 @@ class Cliente(object):
     def __init__(self, nome, senha):
         self.nome = nome
         self.senha = senha
-        self.mensagens = None
-        self.uri = ""
+        self.uri = None
 
     def get_nome(self):
         return self.nome
@@ -21,15 +20,16 @@ class Cliente(object):
     def request_loop(self, daemon):
         daemon.requestLoop()
         time.sleep(2)
-    
 
 with Daemon() as daemon:
         
     with Proxy("PYRONAME:RMI") as server:
 
+        cliente = None
+
         while True: 
             print("--------------------------------")
-            print("1-Login\n2-Registrar\n3-Mandar mesagem")
+            print("1-Login\n2-Registrar\n3-Mandar mesagem\n4-Carregar mesagem")
             option = int(input(""))
             
             if option == 1:
@@ -37,11 +37,21 @@ with Daemon() as daemon:
                 nome = input("Nome: ")
                 senha = input("Senha: ")
 
+                senha = md5(senha.encode())
+                senha = senha.hexdigest()
+
                 cliente = Cliente(nome, senha)
+                cliente.uri = server.login(cliente.nome, cliente.senha)
 
-                cliente.mensagens = server.login(cliente.nome, cliente.senha)
+                if cliente.uri == None:
+                    print('[-] Senha incorreta')
+                    
+                else:
+                    print('[+] Logado!')
 
-                print(cliente.mensagens)
+                    user = Proxy(cliente.uri)
+
+                    print(user.hello())
             
             if option == 2:
 
@@ -61,7 +71,11 @@ with Daemon() as daemon:
                 
                 server.mandarMensagem(de, para, msg)
 
+            if option  == 4:
 
-            if option == 4:
+                #carregarMensagens()
+                pass
+            
+            if option == 5:
                 server.show_users()
     
