@@ -60,8 +60,10 @@ def carregarUsuarios():
                 
                 ns.register(usuario.nome, uri)
 
-                mkdir('./' + usuario.nome)
-                
+                try:
+                    mkdir('./' + usuario.nome)
+                except:
+                    pass
                 list_user.append(usuario)
             
             return list_user
@@ -190,8 +192,16 @@ class Servidor():
         lines = file.readlines()
         return lines
 
+    def enviarArquivo(self, callback):
+        
+        cliente = Proxy(callback)
 
-
+        print(cliente.get_arquivo())
+'''
+        arq = open(nome, 'wb')
+        arq.write(buffer)
+        arq.close()
+'''
 
 print("[+] Starting server")
 ns = locateNS()
