@@ -1,6 +1,7 @@
 from Pyro4 import Daemon, Proxy, expose, oneway, callback, locateNS
 from datetime import datetime
 from hashlib import md5
+from os import mkdir
 import threading
 
 daemon = Daemon()
@@ -58,6 +59,8 @@ def carregarUsuarios():
                 usuario.set_uri(uri)
                 
                 ns.register(usuario.nome, uri)
+
+                mkdir('./' + usuario.nome)
                 
                 list_user.append(usuario)
             
@@ -166,16 +169,26 @@ class Servidor():
             if id == user.nome:
                 return user
 
-    def login(self, nome, senha, users = usuarios):
+    def login(self, callback, users = usuarios):
+
+        cliente = Proxy(callback)
+
+        nome = cliente.get_nome()
+        senha = cliente.get_senha()
+
+        
         for user in users:
             user.senha = user.senha.replace('\n', '')
 
             if nome == user.nome and senha == user.senha:
-                return user.uri
-        return None
+                cliente.notificar("Logging...")
+                cliente.set_uriUser(user.uri)
+        
 
     def carregarMensagens(self, arq_nome):
-        pass
+        file = open(arq_nome, 'r')
+        lines = file.readlines()
+        return lines
 
 
 
