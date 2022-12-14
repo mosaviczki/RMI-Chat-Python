@@ -29,10 +29,9 @@ with Daemon() as daemon:
 
         while True: 
             print("--------------------------------")
-            print("1-Login\n2-Registrar")
+            print("1-Login\n2-Registrar\n3-Mandar mesagem")
             option = int(input(""))
             
-
             if option == 1:
 
                 nome = input("Nome: ")
@@ -42,7 +41,7 @@ with Daemon() as daemon:
 
                 cliente.mensagens = server.login(cliente.nome, cliente.senha)
 
-                print(Cliente.mensagens)
+                print(cliente.mensagens)
             
             if option == 2:
 
@@ -55,5 +54,10 @@ with Daemon() as daemon:
                 server.cadastrar_usuario(nome, senha)
 
             if option == 3:
+                
+                server.mandarMensagem('Weiry', 'Maycom', 'Td bem')
+
+
+            if option == 4:
                 server.show_users()
     
