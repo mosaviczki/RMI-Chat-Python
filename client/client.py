@@ -106,14 +106,21 @@ with Daemon() as daemon:
                     print(msgs)
 
             if option == 6:
-                arq = open('fto.png', 'rb')
+
+                nomeFile = input("Nome do arquivo: ")
+
+                arq = open(nomeFile, 'rb')
 
                 arqNome = arq.name
                 arqBuffer = arq.read()
 
                 callback = cliente
                 server.enviarArquivo(callback.uri, arqNome, arqBuffer)
-            
+
+            if option == 7:
+
+                callback = cliente
+                server.criaGrupo(callback.uri, ['Maycom', 'Luis'], 'UTFPR')
 
             if option == 8:
                 server.show_users()

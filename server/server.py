@@ -16,6 +16,9 @@ class Usuario():
         self.mensagens = set()
         self.uri = None
 
+    def get_nome(self):
+        return self.nome
+
     def set_uri(self, uri):
         self.uri = uri
 
@@ -28,6 +31,28 @@ class Usuario():
     def hello(self):
         return "hello"
 
+@expose
+class Grupo():
+    def __init__(self, nome):
+        self.nome = nome
+        self.uri = None
+        self.adm = None
+        self.membros = set()
+        self.dir = None
+
+    def set_membros(self, user):
+        self.membros.add(user)
+
+    def set_uri(self, uri):
+        self.uri = uri
+
+    def set_adm(self, user):
+        self.adm = user
+
+    def set_dir(self, dir):
+        self.dir: dir
+    
+        
   
 def carregarUsuarios():
     try:
@@ -71,10 +96,50 @@ def carregarUsuarios():
     except FileNotFoundError:
         return list()
 
+def carregarGrupo():
+    try:
+        with open('groups.dat', 'r') as file:
+            
+            if len(file.read()) == 0: #Não ha nada no arquivo
+                return list()
+        
+            file.seek(0)
+    
+            list_groups = []
+
+
+            for group in file.readlines():
+                group_list = group.split('|')
+
+                nome = group_list[0]
+                adm = group_list[2]
+                membros = group_list[3:]
+                diretorio = group_list[1]
+                
+                grupo = Grupo(nome)
+                grupo.set_adm(adm)
+                grupo.set_dir(diretorio)
+                grupo.set_membros(membros)
+                
+                ns = locateNS()
+
+                uri = daemon.register(grupo)
+                grupo.set_uri(uri)
+                
+                ns.register(grupo.nome, uri)
+                
+                list_groups.append(grupo)
+            
+            return list_groups
+
+    except FileNotFoundError:
+        return list()
+
 @expose
-class Servidor():
+class Servidor(object):
     
     usuarios = carregarUsuarios()
+    grupos = carregarGrupo()
 
     def cadastrar_usuario(self, nome, senha):
         ns = locateNS()
@@ -107,8 +172,11 @@ class Servidor():
             print("URI:", user.uri)
             print('-----------------------------------------------')
     
-    def mandarMensagem(self, id_manda, id_rec, msg):
-        usuario_manda = self.procuraUsuario(id_manda)
+    def mandarMensagem(self, callback, id_rec, msg):
+        
+        cliente = Proxy(callback)
+
+        usuario_manda = self.procuraUsuario(cliente.get_nome())
         usuario_rec = self.procuraUsuario(id_rec)
 
         aux = list()
@@ -153,6 +221,37 @@ class Servidor():
             with open(arq_nome, 'w') as file:
                 file.write(horario_str + '|' + usuario_manda.nome + '|' + msg + '\n')
 
+    def criaGrupo(self, callback, ids_part, nome_grupo):
+        
+        cliente = Proxy(callback)
+        grupo = Grupo(nome_grupo)
+
+        for user in ids_part:
+            user = self.procuraUsuario(user)
+            grupo.set_membros(user)
+        
+        adm = self.procuraUsuario(cliente.get_nome())
+
+        grupo.set_adm(adm)
+
+        horario = datetime.now()
+        horario_str = horario.strftime('%d/%m/%Y %H:%M')
+
+        hash_grupo = md5((nome_grupo+horario_str).encode())
+        hash_grupo = hash_grupo.hexdigest()
+        hash_grupo = hash_grupo + '.log'
+
+        grupo.set_dir(hash_grupo)
+
+        
+        with open('groups.dat', 'a') as file:
+            file.write(grupo.nome + '|' + hash_grupo + '|' + adm.get_nome())
+            for user in ids_part:
+                user = self.procuraUsuario(user)
+                file.write('|'+ user.get_nome())
+            file.write('\n')
+
+        Servidor.grupos.append(grupo)
 
 
     def vrfHash(self, id, hsh_recebido):  
@@ -165,7 +264,6 @@ class Servidor():
                             return True
 
         return False
-
 
     def procuraUsuario(self, id, users = usuarios):
         for user in users:
