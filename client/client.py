@@ -86,6 +86,21 @@ with Daemon() as daemon:
                     login = Login()
                     widget.addWidget(login)
                     widget.setCurrentIndex(widget.currentIndex()+1)
+            
+            class Chatbox(QDialog):
+                def __init__(self):
+                    super(Chatbox,self).__init__()
+                    loadUi("../view/chat.ui",self)
+                    self.pushButton.clicked.connect(self.message)
+                    self.pushButton_2.clicked.connect(self.LogOut)
+
+                def message(self):
+                    self.chatBox.setText(self.lineEdit.text())
+                
+                def logOut(self):
+                    login = Login()
+                    widget.addWidget(login)
+                    widget.setCurrentIndex(widget.currentIndex()+1)
 
             app=QApplication(sys.argv)
             mainwindow=Login()

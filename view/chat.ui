@@ -104,22 +104,6 @@ border-radius: 10px;
 color: rgb(255, 255, 255);</string>
     </property>
    </widget>
-   <widget class="QTextBrowser" name="textBrowser">
-    <property name="geometry">
-     <rect>
-      <x>385</x>
-      <y>80</y>
-      <width>1491</width>
-      <height>761</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgba(64, 56, 147, 0.4);
-border-radius: 10px;
-color: rgb(255, 255, 255);
-font: 75 14pt &quot;Candara&quot;;</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
@@ -135,6 +119,22 @@ font: 10pt &quot;Candara&quot;;</string>
     </property>
     <property name="text">
      <string>LogOut</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="chatBox">
+    <property name="geometry">
+     <rect>
+      <x>393</x>
+      <y>60</y>
+      <width>1481</width>
+      <height>781</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(64, 56, 147, 0.4);
+border-radius: 10px;
+color: rgb(255, 255, 255);
+font: 75 14pt &quot;Candara&quot;;</string>
     </property>
    </widget>
   </widget>
