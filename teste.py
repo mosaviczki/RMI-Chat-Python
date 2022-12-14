@@ -1,11 +1,14 @@
-linha_especifica = 2
-texto = "<SEU TEXTO>"
-
 file = open('arquivo.txt', 'r')
 lines = file.readlines()
 file.close()
 
-lines.insert(linha_especifica, texto )
+print(lines)
+string = lines[2] + "Ta aqui poha"
+string = string.replace('\n', '')
+string = string + '\n'
+lines[2] = string
+
+print(lines[2], string)
 
 file = open('arquivo.txt', 'w')
 file.writelines(lines)
