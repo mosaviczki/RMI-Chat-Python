@@ -121,6 +121,8 @@ class Servidor():
                 file = open('users.dat', 'w')
                 file.writelines(lines)
                 file.close()
+            with open(arq_nome, 'w') as file:
+                file.write(horario_str + '|' + usuario_manda.nome + '|' + msg + '\n')
 
 
 
