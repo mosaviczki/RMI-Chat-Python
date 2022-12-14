@@ -37,6 +37,7 @@ def carregarUsuarios():
                 msgs = user[1].split('|')[1:]
                 for msg in msgs:
                     if msg != '\n':
+                        msg = msg.replace('\n', '')
                         usuario.mensagens.add(msg)
             
                 usuario.set_uri(Daemon().register(usuario))
@@ -81,53 +82,60 @@ class Servidor():
         usuario_manda = self.procuraUsuario(id_manda)
         usuario_rec = self.procuraUsuario(id_rec)
 
+        aux = list()
+        aux.append(str(usuario_manda.nome))
+        aux.append(str(usuario_rec.nome))
+        aux.sort()
+
         horario = datetime.now()
         horario_str = horario.strftime('%d/%m/%Y %H:%M')
 
-        arq_nome = usuario_manda.nome + usuario_rec.nome
+        arq_nome = aux[0] + aux[1]
         arq_nome = md5(arq_nome.encode())
         arq_nome = arq_nome.hexdigest()
         arq_nome = arq_nome + '.log'
 
-        arq_nome1 = usuario_rec.nome + usuario_manda.nome 
-        arq_nome1 = md5(arq_nome1.encode())
-        arq_nome1 = arq_nome1.hexdigest()
-        arq_nome1 = arq_nome1 + '.log'
-
-        print("AAA")
-
         if self.vrfHash(usuario_manda.nome, arq_nome):
             with open(arq_nome, 'a') as file:
-                file.write(horario_str + '|' + usuario_manda.nome + '|' + msg + '\n')
-
-
-        elif self.vrfHash(usuario_manda.nome, arq_nome1):
-            with open(arq_nome1, 'a') as file:
                 file.write(horario_str + '|' + usuario_manda.nome + '|' + msg + '\n')
 
         else:
             usuario_manda.mensagens.add(arq_nome)
             usuario_rec.mensagens.add(arq_nome)
 
-            with open('users.dat', 'r') as file:
-                for linha in file.readlines():
-                    if linha.split(':')[0] == usuario_manda.nome:
-                        file.write('|' + arq_nome + '|')
+            for user in aux:
+                
+                file = open('users.dat', 'r')
+                lines = file.readlines()
+                i = 0
+                for itens in lines:
+                    if itens.split(':')[0] == user:
+                        linhas = i
+                        texto = itens
+
+                    i+=1
+                file.close()
+
+                lines[linhas] = texto.replace('\n', '') + '|' + arq_nome +'\n'
+
+                file = open('users.dat', 'w')
+                file.writelines(lines)
+                file.close()
+
+
 
     def vrfHash(self, id, hsh_recebido):
         
-        print('inic fun verifica hash')
         with open('users.dat', 'r') as file:
             for linha in file.readlines():
                 if linha.split(':')[0] == id:
                     linha = linha.split('|')[1:]
                     for hsh in linha:
-                        if hsh == hsh_recebido:
+                        if hsh.replace('\n','') == hsh_recebido:
                             return True
-        
-        print('inic fun verifica hash')
 
         return False
+
 
     def procuraUsuario(self, id, users = usuarios):
         for user in users:

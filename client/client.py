@@ -55,7 +55,11 @@ with Daemon() as daemon:
 
             if option == 3:
                 
-                server.mandarMensagem('Weiry', 'Maycom', 'Td bem')
+                de = input("Digite seu nome: ")
+                para = input("Digite para quem vai a msg: ")
+                msg = input('Digite a msg: ')
+                
+                server.mandarMensagem(de, para, msg)
 
 
             if option == 4:
