@@ -95,7 +95,7 @@ border-radius: 5px</string>
      <string>SENHA</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="buttonEntrar">
     <property name="geometry">
      <rect>
       <x>590</x>
