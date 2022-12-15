@@ -122,12 +122,12 @@ with Daemon() as daemon:
                 nome = input('Informe o nome do grupo: ')
 
                 callback = cliente
-                server.criaGrupo(callback.uri, ['Maycom', 'Luis'], nome)
+                server.criaGrupo(callback.uri, ['Maycom'], nome)
 
             if option == 8:
                 
                 callback = cliente
-                server.addNovoUsuarioGrupo(callback.uri, 'Broxas')
+                server.addNovoUsuarioGrupo(callback.uri, 'UTF')
             
 
             if option == 9:
