@@ -115,11 +115,15 @@ with Daemon() as daemon:
                 def __init__(self):
                     super(Chatbox,self).__init__()
                     loadUi("../view/chat.ui",self)
-                    #self.pushButton.clicked.connect(self.message)
+                    self.pushButton.clicked.connect(self.message)
                     #self.pushButton_2.clicked.connect(self.LogOut)
 
-                #def message(self):
-                #    self.chatBox.setText(self.lineEdit.text())
+                def message(self):
+                    self.lineEdit.text()
+                    self.chatBox.setText(self.lineEdit.text())
+                    user = Proxy(cliente.uriUser)
+                    for arq in user.get_mensagens():
+                        msgs = server.carregarMensagens(arq)
                             
                 #def logOut(self):
                 #    login = Login()
