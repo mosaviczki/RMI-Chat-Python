@@ -74,7 +74,7 @@ with Daemon() as daemon:
                         QMessageBox.about(self, "Error", "Senha incorreta!")
                         
                     else:
-                        telaChat = Chatbox()
+                        telaChat = Chatbox(nome)
                         widget.addWidget(telaChat)
                         widget.setCurrentIndex(widget.currentIndex()+1)
                     
@@ -112,18 +112,25 @@ with Daemon() as daemon:
                         
 
             class Chatbox(QDialog):
-                def __init__(self):
+                def __init__(self, nome):
+                    self.nome = nome 
+                    #self.para = para
                     super(Chatbox,self).__init__()
                     loadUi("../view/chat.ui",self)
                     self.pushButton.clicked.connect(self.message)
                     #self.pushButton_2.clicked.connect(self.LogOut)
 
                 def message(self):
-                    self.lineEdit.text()
-                    self.chatBox.setText(self.lineEdit.text())
-                    user = Proxy(cliente.uriUser)
-                    for arq in user.get_mensagens():
-                        msgs = server.carregarMensagens(arq)
+                    de = self.nome
+                    para = input("Digite para quem vai a msg: ")
+                    msg = self.lineEdit.text()
+                    
+                    #server.mandarMensagem(de, para, msg)
+                    
+                    self.chatBox.setText(de + ":" + msg)
+                    #user = Proxy(cliente.uriUser)
+                    #for arq in user.get_mensagens():
+                    #    msgs = server.carregarMensagens(arq)
                             
                 #def logOut(self):
                 #    login = Login()
@@ -140,6 +147,13 @@ with Daemon() as daemon:
             app.exec_()
 
         """
+        if option == 3:
+                
+                de = input("Digite seu nome: ")
+                para = input("Digite para quem vai a msg: ")
+                msg = input('Digite a msg: ')
+                
+                server.mandarMensagem(de, para, msg)
          if option  == 4:
                 if cliente == None:
                     print("Cliente não logado!")

@@ -113,9 +113,20 @@ border-radius: 5px</string>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(0, 202, 202);
-border-radius: 10px;
-color: rgb(255, 255, 255);</string>
+     <string notr="true">QPushButton{
+	background-color: rgb(0, 202, 202);
+	border-radius: 10px;
+	color: rgb(255, 255, 255);
+}
+QPushButton:hover{
+	background-color: rgb(0, 140, 140);
+	color: rgb(255, 255, 255);
+}
+QPushButton:pressed{
+	background-color: rgb(20, 202, 202);
+	border-radius: 10px;
+	color: rgb(255, 255, 255);
+}</string>
     </property>
     <property name="text">
      <string>ENTRAR</string>
