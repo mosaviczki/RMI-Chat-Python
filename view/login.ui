@@ -197,6 +197,9 @@ border:5px solid;
 border-color: rgb(23, 20, 52);
 border-bottom-color: rgb(199, 199, 199);</string>
     </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
+    </property>
    </widget>
   </widget>
  </widget>
