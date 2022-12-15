@@ -2,7 +2,7 @@ from Pyro4 import Daemon, Proxy, expose, oneway, callback, locateNS
 from serpent import tobytes
 from datetime import datetime
 from hashlib import md5
-from os import mkdir
+from os import mkdir, remove
 import threading
 
 daemon = Daemon()
@@ -22,6 +22,8 @@ class Usuario():
 
     def set_uri(self, uri):
         self.uri = uri
+    def update_mensagens(self, mensagens):
+        self.mensagens = mensagens
 
     def get_nome(self):
         return self.nome
@@ -50,6 +52,9 @@ class Grupo():
     def set_membros(self, user):
         self.membros.add(user)
 
+    def update_membros(self, membros):
+        self.membros = membros
+
     def set_uri(self, uri):
         self.uri = uri
 
@@ -71,7 +76,6 @@ class Grupo():
     def get_membros(self):
         return self.membros
     
-        
   
 def carregarUsuarios():
     try:
@@ -271,11 +275,11 @@ class Servidor(object):
 
         for user in ids_part:
             user = self.procuraUsuario(user)
-            grupo.set_membros(user)
+            grupo.set_membros(user.get_nome())
         
         adm = self.procuraUsuario(cliente.get_nome())
 
-        grupo.set_adm(adm)
+        grupo.set_adm(adm.get_nome())
 
         horario = datetime.now()
         horario_str = horario.strftime('%d/%m/%Y %H:%M')
@@ -310,7 +314,7 @@ class Servidor(object):
             usuario = self.procuraUsuario(cliente.get_nome())
             grupo = self.procuraGrupo(nome_grupo)
 
-            grupo.set_membros(usuario)
+            grupo.set_membros(usuario.get_nome())
 
             #if usuario.get_adm():
             file = open('groups.dat', 'r')
@@ -373,6 +377,149 @@ class Servidor(object):
                 return user
         return None
 
+    def excluirUsuario(self, id, nome_grupo):
+
+        grupo = self.procuraGrupo(nome_grupo)
+        membros = grupo.get_membros() 
+   
+        if id in membros:
+            membros.remove(id)
+            grupo.update_membros(membros)
+            
+        #exclui usuário do grupo
+        file = open('groups.dat', 'r')
+        lines = file.readlines()
+        i = 0
+        for itens in lines:
+            if itens.split('|')[0] == nome_grupo:
+                linhas = i
+                texto = itens
+
+            i+=1
+        
+        file.close()
+
+        lines[linhas] = texto.replace('|'+id, '')
+
+        file = open('groups.dat', 'w')
+        file.writelines(lines)
+        file.close()
+              
+        self.removeHash(id, grupo.get_dir())
+
+    def removeHash(self, id, nomeHash):    
+        texto = None
+
+        usuario = self.procuraUsuario(id)
+        conversas = usuario.get_mensagens()
+
+        if nomeHash in conversas:
+            conversas.remove(nomeHash)
+            usuario.update_mensagens(conversas)
+        
+        file = open('users.dat', 'r')
+        lines = file.readlines()
+        i = 0
+        for itens in lines:
+            if itens.split(':')[0] == id:
+                linhas = i
+                texto = itens
+
+            i+=1
+
+        file.close()
+
+        lines[linhas] = texto.replace('|' + nomeHash, '')
+
+        file = open('users.dat', 'w')
+        file.writelines(lines)
+        file.close()
+
+
+    def excluirGrupo(self, callback, nome_grupo):
+        
+        cliente = Proxy(callback)
+        
+        usuario = self.procuraUsuario(cliente.get_nome())
+        grupo = self.procuraGrupo(nome_grupo)
+
+        if grupo == None:
+            cliente.notificar('O Grupo não existe')
+            return None
+
+        if grupo.get_adm() == cliente.get_nome():
+
+            for membro in grupo.get_membros():
+                print(membro)
+                
+                file = open('users.dat', 'r')
+                lines = file.readlines()
+                i = 0
+                for itens in lines:
+                    if itens.split(':')[0] == membro:
+                        linhas = i
+                        texto = itens
+
+                    i+=1
+
+                file.close()
+
+                lines[linhas] = texto.replace('|' + grupo.get_dir(), '')
+
+                file = open('users.dat', 'w')
+                file.writelines(lines)
+                file.close()
+
+            print(grupo.get_adm())
+            file = open('users.dat', 'r')
+            lines = file.readlines()
+            i = 0
+            for itens in lines:
+                if itens.split(':')[0] == grupo.get_adm():
+                    linhas = i
+                    texto = itens
+
+                i+=1
+
+            file.close()
+
+            lines[linhas] = texto.replace('|' + grupo.get_dir(), '')
+
+            file = open('users.dat', 'w')
+            file.writelines(lines)
+            file.close()
+
+
+            print('antes de abrir o arquivo')
+            file = open('groups.dat', 'r')
+            lines = file.readlines()
+            j = 0
+            print('anter do for itens')
+            for itens in lines:
+                if itens.split('|')[0] == nome_grupo:
+                    linha = j
+                j+=1
+
+            file.close()
+
+            print(lines)
+
+            lines.pop(linha)
+
+            print(lines)
+
+            file = open('groups.dat', 'w')
+            file.writelines(lines)
+            file.close()
+
+            remove(grupo.get_dir())
+
+            self.grupos.remove(grupo)
+            
+        else:
+            cliente.notificar('Apenas o ADM pode apagar o grupo')
+        
+
     def procuraGrupo(self, nome_grupo):
         for grupo in self.grupos:
             if nome_grupo == grupo.get_nome():
@@ -409,6 +556,14 @@ class Servidor(object):
         arq.close()
 
         cliente.notificar('Arquivo enviado com sucesso!')
+
+    def showGrupos(self):
+        for grupo in self.grupos:
+            print(grupo.get_nome())
+            print(grupo.get_dir()) 
+            print(grupo.get_adm())
+            print(grupo.get_membros())
+            print() 
     
     def showUser(self):
         list_Usuarios = []

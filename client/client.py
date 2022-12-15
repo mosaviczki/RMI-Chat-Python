@@ -129,6 +129,13 @@ with Daemon() as daemon:
                 callback = cliente
                 server.addNovoUsuarioGrupo(callback.uri, 'UTF')
             
-
             if option == 9:
-                print(server.showUser())
+                server.excluirUsuario('Monique', 'UTF')
+
+            if option == 10:
+                callback = cliente
+                nome = input('Informe o nome do grupo: ')
+                server.excluirGrupo(callback.uri, nome)
+            
+            if option == 11:
+                server.showGrupos()
