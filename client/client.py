@@ -25,6 +25,9 @@ class Cliente(object):
     def set_uriUser(self, uri):
         self.uriUser = uri
 
+    def get_uriUser(self):
+        return self.uriUser
+
     def request_loop(self, daemon):
         daemon.requestLoop()
         time.sleep(2)
@@ -58,9 +61,9 @@ with Daemon() as daemon:
                     senha = md5(senha.encode())
                     senha = senha.hexdigest()
 
-                    self.cliente = Cliente(nome, senha)
+                    cliente = Cliente(nome, senha)
 
-                    callback = self.cliente
+                    callback = cliente
                     callback.uri = daemon.register(callback)
 
                     loop_thread = threading.Thread(target=callback.request_loop, args=(daemon, ))
@@ -69,11 +72,12 @@ with Daemon() as daemon:
 
                     server.login(callback.uri)
 
-                    if self.cliente.uriUser == None:
-                        QMessageBox.about(self, "Error", "Senha incorreta!")
-                        
+                    print(cliente.get_uriUser())
+
+                    if cliente.get_uriUser() == None:
+                        QMessageBox.about(self, "Error", "Usuario ou senha inválida!")
                     else:
-                        telaChat = Chatbox(nome, senha)
+                        telaChat = Chatbox(nome, cliente)
                         widget.addWidget(telaChat)
                         widget.setCurrentIndex(widget.currentIndex()+1)
                     
@@ -111,42 +115,47 @@ with Daemon() as daemon:
                         
 
             class Chatbox(QDialog):
-                def __init__(self, nome, senha):
-                    self.cliente = Cliente(nome, senha)
-                    self.nome = nome 
+                def __init__(self, nome, cliente):
                     super(Chatbox,self).__init__()
+                    self.nome = nome
+                    self.client = cliente 
                     loadUi("../view/chat.ui",self)
                     self.user.setText(nome)
-                    print(self.cliente)
-                    self.listarUser(self)
-                    self.pushButton.clicked.connect(self.message)
+                    self.listarUser()
+                    #self.pushButton.clicked.connect(self.message)
                     self.pushButton_2.clicked.connect(self.logOut)
                     #self.buttonArq.clicked.connect(self.enviaArquivo)
 
-                def listarUser(self, lista):
+                def listarUser(self):
                     lista = []
                     for users in server.showUser():
                         if users != self.nome:
                             if users != None:
                                 lista.append(users)
-                                for u in lista:
-                                    usuario = self.listWidget.addItem(u)
+                    for u in lista:
+                        usuario = self.listWidget.addItem(u)
 
                     self.listWidget.itemClicked.connect(self.getItem)
-                    
+
                 def getItem(self, itm):
-                    self.para = itm.text()
+                    para = itm.text()
+                    self.carregaMensagem(para)
+                    self.message(para)
 
-                def message(self):
+                def carregaMensagem(self, usuario_dest):
+                    user = Proxy(self.client.uriUser)
+                    for arq in user.get_mensagens():
+                        msgs = server.carregarMensagens(arq)
+                        print(msgs)
+                        for x in range(len(msgs)):
+                            self.chatBox.append(msgs[x])
+
+                def message(self, usuario_dest):
                     msg = self.lineEdit.text()
-                    self.chatBox.append(self.nome + ": " + msg)    
-                    #callback = self.cliente
-
-                    #server.mandarMensagem(callback.uri, self.para, msg)
-
-
-                def recebeMessage(self):
-                    return 0
+                    #self.chatBox.append(self.nome + ": " + msg)
+                    callback = self.client
+                    if self.pushButton.clicked():
+                        server.mandarMensagem(callback.uri, usuario_dest, msg)
                             
                 def logOut(self):
                     login = Login()
