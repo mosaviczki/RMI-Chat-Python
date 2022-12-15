@@ -59,6 +59,9 @@ class Grupo():
     def set_dir(self, dir):
         self.dir = dir
 
+    def get_nome(self):
+        return self.nome
+        
     def get_dir(self):
         return self.dir
 
@@ -68,7 +71,6 @@ class Grupo():
     def get_membros(self):
         return self.membros
     
-        
   
 def carregarUsuarios():
     try:
@@ -268,11 +270,11 @@ class Servidor(object):
 
         for user in ids_part:
             user = self.procuraUsuario(user)
-            grupo.set_membros(user)
+            grupo.set_membros(user.get_nome())
         
         adm = self.procuraUsuario(cliente.get_nome())
 
-        grupo.set_adm(adm)
+        grupo.set_adm(adm.get_nome())
 
         horario = datetime.now()
         horario_str = horario.strftime('%d/%m/%Y %H:%M')
@@ -289,41 +291,51 @@ class Servidor(object):
         
         with open('groups.dat', 'a') as file:
             file.write(grupo.nome + '|' + hash_grupo + '|' + adm.get_nome())
+            self.addHash(adm.get_nome(), hash_grupo)
             for user in ids_part:
                 user = self.procuraUsuario(user)
+                file.write('|' + user.get_nome())
                 self.addHash(user.get_nome(), hash_grupo)
-
+            file.write('\n')
 
         Servidor.grupos.append(grupo)
 
     def addNovoUsuarioGrupo(self, callback, nome_grupo):
         cliente = Proxy(callback)
+        grupo = self.procuraGrupo(nome_grupo)
 
-        usuario = self.procuraUsuario(cliente.nome)
+        if grupo.get_adm != cliente.get_nome():
 
-        #if usuario.get_adm():
-        file = open('groups.dat', 'r')
-        lines = file.readlines()
-        i = 0
-        for itens in lines:
-            if itens.split('|')[0] == nome_grupo:
-                linhas = i
-                texto = itens
+            usuario = self.procuraUsuario(cliente.get_nome())
+            grupo = self.procuraGrupo(nome_grupo)
 
-            i+=1
-            file.close()
+            grupo.set_membros(usuario.get_nome())
 
-            lines[linhas] = texto.replace('\n', '') + '|' + usuario.get_nome() +'\n'
+            #if usuario.get_adm():
+            file = open('groups.dat', 'r')
+            lines = file.readlines()
+            i = 0
+            for itens in lines:
+                if itens.split('|')[0] == nome_grupo:
+                    linhas = i
+                    texto = itens
 
-            file = open('groups.dat', 'w')
-            file.writelines(lines)
-            file.close()
+                i+=1
+                file.close()
 
-            #agora iremos adicionar a conversa ao Hash do cliente
-            self.addHash(usuario.get_nome(), nome_grupo.get_dir())
+                lines[linhas] = texto.replace('\n', '') + '|' + usuario.get_nome() +'\n'
 
-        #else:
-            #cliente.notificar('Apenas o administrador pode inserir mebors no grupo')
+                file = open('groups.dat', 'w')
+                file.writelines(lines)
+                file.close()
+
+                #agora iremos adicionar a conversa ao Hash do cliente
+                self.addHash(usuario.get_nome(), grupo.get_dir())
+
+            #else:
+                #cliente.notificar('Apenas o administrador pode inserir mebors no grupo')
+        else:
+            cliente.notificar('Não Executado, você é adm do grupo')
         
     def addHash(self, userName, hash_mensagem):
         file = open('users.dat', 'r')
@@ -358,6 +370,12 @@ class Servidor(object):
         for user in users:
             if id == user.nome:
                 return user
+        return None
+
+    def procuraGrupo(self, nome_grupo):
+        for grupo in self.grupos:
+            if nome_grupo == grupo.get_nome():
+                return grupo
         return None
 
     def login(self, callback, users = usuarios):
@@ -398,6 +416,7 @@ class Servidor(object):
             list_Usuarios.append(user.get_nome())
         return list_Usuarios
         
+    
 
 print("[+] Starting server")
 ns = locateNS()

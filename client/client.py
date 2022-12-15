@@ -55,13 +55,12 @@ with Daemon() as daemon:
                 def logIn(self): #Efetua o login
                     nome = self.lineEdit.text()
                     senha = self.lineEdit_2.text()
-                    
                     senha = md5(senha.encode())
                     senha = senha.hexdigest()
 
-                    cliente = Cliente(nome, senha)
+                    self.cliente = Cliente(nome, senha)
 
-                    callback = cliente
+                    callback = self.cliente
                     callback.uri = daemon.register(callback)
 
                     loop_thread = threading.Thread(target=callback.request_loop, args=(daemon, ))
@@ -70,11 +69,11 @@ with Daemon() as daemon:
 
                     server.login(callback.uri)
 
-                    if cliente.uriUser == None:
+                    if self.cliente.uriUser == None:
                         QMessageBox.about(self, "Error", "Senha incorreta!")
                         
                     else:
-                        telaChat = Chatbox(nome)
+                        telaChat = Chatbox(nome, senha)
                         widget.addWidget(telaChat)
                         widget.setCurrentIndex(widget.currentIndex()+1)
                     
@@ -112,37 +111,38 @@ with Daemon() as daemon:
                         
 
             class Chatbox(QDialog):
-                def __init__(self, nome):
+                def __init__(self, nome, senha):
+                    self.cliente = Cliente(nome, senha)
                     self.nome = nome 
                     super(Chatbox,self).__init__()
                     loadUi("../view/chat.ui",self)
                     self.user.setText(nome)
-                    
+                    print(self.cliente)
                     self.listarUser(self)
                     self.pushButton.clicked.connect(self.message)
                     self.pushButton_2.clicked.connect(self.logOut)
                     #self.buttonArq.clicked.connect(self.enviaArquivo)
 
                 def listarUser(self, lista):
-                    lista = ['user 2', 'user 3']
-                    for users in lista:
-                        usuario = self.listWidget.addItem(users)
+                    lista = []
+                    for users in server.showUser():
+                        if users != self.nome:
+                            if users != None:
+                                lista.append(users)
+                                for u in lista:
+                                    usuario = self.listWidget.addItem(u)
+
                     self.listWidget.itemClicked.connect(self.getItem)
                     
-
                 def getItem(self, itm):
                     self.para = itm.text()
 
                 def message(self):
                     msg = self.lineEdit.text()
                     self.chatBox.append(self.nome + ": " + msg)    
-                    callback = cliente
-                    server.mandarMensagem(callback.uri, self.para, msg)
-                    
-                    
-                    #user = Proxy(cliente.uriUser)
-                    #for arq in user.get_mensagens():
-                    #    msgs = server.carregarMensagens(arq)
+                    #callback = self.cliente
+
+                    #server.mandarMensagem(callback.uri, self.para, msg)
 
 
                 def recebeMessage(self):
@@ -170,7 +170,8 @@ with Daemon() as daemon:
                 msg = input('Digite a msg: ')
                 
                 server.mandarMensagem(callback.uri, para, msg)
-         if option  == 4:
+
+            if option  == 4:
                 if cliente == None:
                     print("Cliente não logado!")
                 else:
@@ -183,16 +184,31 @@ with Daemon() as daemon:
                     print(msgs)
 
             if option == 6:
-                arq = open('fto.png', 'rb')
+
+                nomeFile = input("Nome do arquivo: ")
+
+                arq = open(nomeFile, 'rb')
 
                 arqNome = arq.name
                 arqBuffer = arq.read()
 
                 callback = cliente
                 server.enviarArquivo(callback.uri, arqNome, arqBuffer)
-            
+
+            if option == 7:
+
+                nome = input('Informe o nome do grupo: ')
+
+                callback = cliente
+                server.criaGrupo(callback.uri, ['Maycom', 'Luis'], nome)
 
             if option == 8:
-                server.show_users()
+                
+                callback = cliente
+                server.addNovoUsuarioGrupo(callback.uri, 'UTF')
+            
+
+            if option == 9:
+                print(server.showUser())
         """
     
