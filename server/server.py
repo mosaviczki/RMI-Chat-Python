@@ -50,7 +50,16 @@ class Grupo():
         self.adm = user
 
     def set_dir(self, dir):
-        self.dir: dir
+        self.dir = dir
+
+    def get_dir(self):
+        return self.dir
+
+    def get_adm(self):
+        return self.adm
+
+    def get_membros(self):
+        return self.membros
     
         
   
@@ -112,14 +121,17 @@ def carregarGrupo():
                 group_list = group.split('|')
 
                 nome = group_list[0]
+                diretorio = group_list[1]
                 adm = group_list[2]
                 membros = group_list[3:]
-                diretorio = group_list[1]
                 
+
                 grupo = Grupo(nome)
                 grupo.set_adm(adm)
                 grupo.set_dir(diretorio)
-                grupo.set_membros(membros)
+                for user in membros:
+                    user = user.replace('\n', '')
+                    grupo.set_membros(user)
                 
                 ns = locateNS()
 
@@ -127,7 +139,8 @@ def carregarGrupo():
                 grupo.set_uri(uri)
                 
                 ns.register(grupo.nome, uri)
-                
+
+
                 list_groups.append(grupo)
             
             return list_groups
@@ -175,17 +188,37 @@ class Servidor(object):
     def mandarMensagem(self, callback, id_rec, msg):
         
         cliente = Proxy(callback)
-
         usuario_manda = self.procuraUsuario(cliente.get_nome())
+
+        horario = datetime.now()
+        horario_str = horario.strftime('%d/%m/%Y %H:%M')
+
+
+        for grupo in self.grupos:
+            if grupo.nome == id_rec:
+
+                print(grupo.get_membros())
+
+                if ( usuario_manda.nome in grupo.get_membros() ) or (usuario_manda.nome == grupo.get_adm()):
+                    with open(grupo.get_dir(), 'a') as file:
+                        file.write(horario_str + '|' + usuario_manda.nome + '|' + msg + '\n')
+                    return None
+                else:
+                    cliente.notificar('Voce nao e membro do grupo')
+                    return None
+
         usuario_rec = self.procuraUsuario(id_rec)
+
+        #Verifica se rec existe
+
+        if usuario_rec == None:
+            cliente.notificar('Usuario não existe!')
+            return None
 
         aux = list()
         aux.append(str(usuario_manda.nome))
         aux.append(str(usuario_rec.nome))
         aux.sort()
-
-        horario = datetime.now()
-        horario_str = horario.strftime('%d/%m/%Y %H:%M')
 
         arq_nome = aux[0] + aux[1]
         arq_nome = md5(arq_nome.encode())
@@ -241,6 +274,9 @@ class Servidor(object):
         hash_grupo = hash_grupo.hexdigest()
         hash_grupo = hash_grupo + '.log'
 
+        arq = open(hash_grupo, 'w')
+        arq.close()
+
         grupo.set_dir(hash_grupo)
 
         
@@ -252,6 +288,26 @@ class Servidor(object):
             file.write('\n')
 
         Servidor.grupos.append(grupo)
+
+    def addNovoUsuarioGrupo(self, callback, nome_grupo):
+        usuario = Proxy(callback)
+
+        file = open('groups.dat', 'r')
+        lines = file.readlines()
+        i = 0
+        for itens in lines:
+            if itens.split('|')[0] == nome_grupo:
+                linhas = i
+                texto = itens
+
+            i+=1
+            file.close()
+
+            lines[linhas] = texto.replace('\n', '') + '|' + usuario.get_nome() +'\n'
+
+            file = open('groups.dat', 'w')
+            file.writelines(lines)
+            file.close()
 
 
     def vrfHash(self, id, hsh_recebido):  
@@ -269,6 +325,7 @@ class Servidor(object):
         for user in users:
             if id == user.nome:
                 return user
+        return None
 
     def login(self, callback, users = usuarios):
 
@@ -285,7 +342,6 @@ class Servidor(object):
                 cliente.notificar("Logging...")
                 cliente.set_uriUser(user.uri)
         
-
     def carregarMensagens(self, arq_nome):
         file = open(arq_nome, 'r')
         lines = file.readlines()
@@ -301,6 +357,7 @@ class Servidor(object):
         arq.close()
 
         cliente.notificar('Arquivo enviado com sucesso!')
+    
 
 
 print("[+] Starting server")
