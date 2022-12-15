@@ -571,6 +571,19 @@ class Servidor(object):
         for user in self.usuarios:
             list_Usuarios.append(user.get_nome())
         return list_Usuarios
+
+    def meusGrupos(self, callback):
+        cliente = Proxy(callback)
+        usuario = self.procuraUsuario(cliente.get_nome())
+
+        lista = []
+
+        for grupo in self.grupos:
+            if grupo.get_dir() in usuario.get_mensagens():
+                lista.append(grupo.get_nome() + ':' + grupo.get_dir())
+
+        return lista
+            
         
     
 

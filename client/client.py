@@ -139,3 +139,8 @@ with Daemon() as daemon:
             
             if option == 11:
                 server.showGrupos()
+
+            if option == 12:
+                callback = cliente
+                grupos = server.meusGrupos(cliente.uri)
+                print(grupos)
