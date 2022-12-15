@@ -114,7 +114,6 @@ with Daemon() as daemon:
             class Chatbox(QDialog):
                 def __init__(self, nome):
                     self.nome = nome 
-                    #self.para = para
                     super(Chatbox,self).__init__()
                     loadUi("../view/chat.ui",self)
                     self.user.setText(nome)
@@ -129,14 +128,16 @@ with Daemon() as daemon:
                     for users in lista:
                         usuario = self.listWidget.addItem(users)
                     self.listWidget.itemClicked.connect(self.getItem)
+                    
 
                 def getItem(self, itm):
                     self.para = itm.text()
 
                 def message(self):
                     msg = self.lineEdit.text()
-                    self.chatBox.append(self.nome + ": " + msg)
-                    #server.mandarMensagem(self.nome, self.para, msg)
+                    self.chatBox.append(self.nome + ": " + msg)    
+                    callback = cliente
+                    server.mandarMensagem(callback.uri, self.para, msg)
                     
                     
                     #user = Proxy(cliente.uriUser)
@@ -164,11 +165,11 @@ with Daemon() as daemon:
         """
         if option == 3:
                 
-                de = input("Digite seu nome: ")
+                callback = cliente
                 para = input("Digite para quem vai a msg: ")
                 msg = input('Digite a msg: ')
                 
-                server.mandarMensagem(de, para, msg)
+                server.mandarMensagem(callback.uri, para, msg)
          if option  == 4:
                 if cliente == None:
                     print("Cliente não logado!")
