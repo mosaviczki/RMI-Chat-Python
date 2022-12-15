@@ -144,18 +144,28 @@ with Daemon() as daemon:
 
                 def carregaMensagem(self, usuario_dest):
                     user = Proxy(self.client.uriUser)
+
+                    print(self.nome, usuario_dest)
+
+                    aux = [self.nome, usuario_dest]
+                    aux.sort()
+                    aux = aux[0] + aux[1]
+
+                    aux = md5(aux.encode())
+                    aux = aux.hexdigest()
+
                     for arq in user.get_mensagens():
-                        msgs = server.carregarMensagens(arq)
-                        print(msgs)
+                        msgs = server.carregarMensagens(aux + '.log')
                         for x in range(len(msgs)):
                             self.chatBox.append(msgs[x])
+                        
 
                 def message(self, usuario_dest):
                     msg = self.lineEdit.text()
-                    #self.chatBox.append(self.nome + ": " + msg)
+                    self.chatBox.append(self.nome + ": " + msg)
                     callback = self.client
-                    if self.pushButton.clicked():
-                        server.mandarMensagem(callback.uri, usuario_dest, msg)
+                    server.mandarMensagem(callback.uri, usuario_dest, msg)
+
                             
                 def logOut(self):
                     login = Login()
