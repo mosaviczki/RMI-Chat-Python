@@ -42,7 +42,7 @@ with Daemon() as daemon:
 
         while True: 
             print("--------------------------------")
-            print("1-Login\n2-Registrar\n3-Mandar mesagem\n4-Mostrar Cliente\n5-Carregar mensagens\n6-Enviar arquivo\n7-Criar Grupo")
+            print("1-Login\n2-Registrar\n3-Mandar mesagem\n4-Mostrar Cliente\n5-Carregar mensagens\n6-Enviar arquivo\n7-Criar Grupo\n8-Adicionar novo usuário")
             option = int(input(""))
             
             if option == 1:
@@ -125,8 +125,10 @@ with Daemon() as daemon:
                 server.criaGrupo(callback.uri, ['Maycom', 'Luis'], nome)
 
             if option == 8:
-                server.addNovoUsuarioGrupo(callback.uri, nome_grupo)
+                
+                callback = cliente
+                server.addNovoUsuarioGrupo(callback.uri, 'Broxas')
             
 
             if option == 9:
-                server.show_users()
+                print(server.showUser())

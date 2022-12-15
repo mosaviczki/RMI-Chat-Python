@@ -15,18 +15,25 @@ class Usuario():
         self.senha = senha
         self.mensagens = set()
         self.uri = None
+        self.adm = False
 
-    def get_nome(self):
-        return self.nome
+    def set_adm(self, adm):
+        self.adm = adm
 
     def set_uri(self, uri):
         self.uri = uri
+
+    def get_nome(self):
+        return self.nome
 
     def get_uri(self):
         return self.uri
     
     def get_mensagens(self):
         return self.mensagens
+
+    def get_adm(self):
+        return self.adm
     
     def hello(self):
         return "hello"
@@ -175,7 +182,7 @@ class Servidor(object):
         Servidor.usuarios.append(usuario)
 
         print(f"[+] Usuario {nome} criado")
-
+    
     def show_users(self, users = usuarios):
         print('--------------------USERS-----------------------')
         for user in users:
@@ -284,14 +291,17 @@ class Servidor(object):
             file.write(grupo.nome + '|' + hash_grupo + '|' + adm.get_nome())
             for user in ids_part:
                 user = self.procuraUsuario(user)
-                file.write('|'+ user.get_nome())
-            file.write('\n')
+                self.addHash(user.get_nome(), hash_grupo)
+
 
         Servidor.grupos.append(grupo)
 
     def addNovoUsuarioGrupo(self, callback, nome_grupo):
-        usuario = Proxy(callback)
+        cliente = Proxy(callback)
 
+        usuario = self.procuraUsuario(cliente.nome)
+
+        #if usuario.get_adm():
         file = open('groups.dat', 'r')
         lines = file.readlines()
         i = 0
@@ -309,7 +319,30 @@ class Servidor(object):
             file.writelines(lines)
             file.close()
 
+            #agora iremos adicionar a conversa ao Hash do cliente
+            self.addHash(usuario.get_nome(), nome_grupo.get_dir())
 
+        #else:
+            #cliente.notificar('Apenas o administrador pode inserir mebors no grupo')
+        
+    def addHash(self, userName, hash_mensagem):
+        file = open('users.dat', 'r')
+        lines = file.readlines()
+        i = 0
+        for itens in lines:
+            if itens.split(':')[0] == userName:
+                linhas = i
+                texto = itens
+
+            i+=1
+        file.close()
+
+        lines[linhas] = texto.replace('\n', '') + '|' + hash_mensagem +'\n'
+
+        file = open('users.dat', 'w')
+        file.writelines(lines)
+        file.close()
+                
     def vrfHash(self, id, hsh_recebido):  
         with open('users.dat', 'r') as file:
             for linha in file.readlines():
@@ -358,7 +391,13 @@ class Servidor(object):
 
         cliente.notificar('Arquivo enviado com sucesso!')
     
+    def showUser(self):
+        list_Usuarios = []
 
+        for user in self.usuarios:
+            list_Usuarios.append(user.get_nome())
+        return list_Usuarios
+        
 
 print("[+] Starting server")
 ns = locateNS()
