@@ -123,7 +123,7 @@ font: 10pt &quot;Candara&quot;;</string>
      <string notr="true">background-color: rgba(64, 56, 147, 0.4);
 border-radius: 10px;
 color: rgb(255, 255, 255);
-font: 75 14pt &quot;Candara&quot;;</string>
+font: 75 16pt &quot;Candara&quot;;</string>
     </property>
    </widget>
    <widget class="QPushButton" name="buttonArq">
@@ -162,7 +162,8 @@ font: 75 14pt &quot;Candara&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(64, 72, 81, 0);
 border-radius: 10px;
-color: rgb(255, 255, 255);</string>
+color: rgb(255, 255, 255);
+font: 20pt &quot;Cambria&quot;;</string>
     </property>
    </widget>
    <widget class="QWidget" name="widget" native="true">
@@ -189,7 +190,8 @@ color: rgb(255, 255, 255);</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: none;</string>
+      <string notr="true">background-color: none;
+font: 20pt &quot;Cambria&quot;;</string>
      </property>
      <property name="text">
       <string/>
