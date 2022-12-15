@@ -136,72 +136,29 @@ with Daemon() as daemon:
             app.exec_()
 
         """
-            print("--------------------------------")
-            print("1-Login\n2-Registrar\n3-Mandar mesagem\n4-Mostrar Cliente\n5-Carregar mensagens")
-            option = int(input(""))
-            
-            if option == 1:
-
-                nome = input("Nome: ")
-                senha = input("Senha: ")
-
-                senha = md5(senha.encode())
-                senha = senha.hexdigest()
-
-                cliente = Cliente(nome, senha)
-
-                callback = cliente
-                callback.uri = daemon.register(callback)
-
-                loop_thread = threading.Thread(target=callback.request_loop, args=(daemon, ))
-                loop_thread.daemon = False
-                loop_thread.start()
-
-                server.login(callback.uri)
-
-                if cliente.uriUser == None:
-                    print('[-] Senha incorreta')
-                    
-                else:
-                    print('[+] Logado!')
-
-                    user = Proxy(cliente.uriUser)
-
-                    cnv = user.get_mensagens()
-                    print(cnv)
-            
-            if option == 2:
-
-                nome = input("Digite seu nome: ")
-                senha = input("Digite sua senha: ")
-
-                senha = md5(senha.encode())
-                senha = senha.hexdigest()   #Transformando em string 
-
-                server.cadastrar_usuario(nome, senha)
-
-            if option == 3:
-                
-                de = input("Digite seu nome: ")
-                para = input("Digite para quem vai a msg: ")
-                msg = input('Digite a msg: ')
-                
-                server.mandarMensagem(de, para, msg)
-
-            if option  == 4:
+         if option  == 4:
                 if cliente == None:
                     print("Cliente não logado!")
                 else:
                     cliente.show()    
 
             if option == 5:       
-
                 user = Proxy(cliente.uriUser)
                 for arq in user.get_mensagens():
                     msgs = server.carregarMensagens(arq)
                     print(msgs)
 
             if option == 6:
+                arq = open('fto.png', 'rb')
+
+                arqNome = arq.name
+                arqBuffer = arq.read()
+
+                callback = cliente
+                server.enviarArquivo(callback.uri, arqNome, arqBuffer)
+            
+
+            if option == 8:
                 server.show_users()
         """
     
