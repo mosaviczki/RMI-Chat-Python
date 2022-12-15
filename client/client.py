@@ -1,6 +1,6 @@
 import threading, time, sys
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QMessageBox
+from PyQt5.QtWidgets import QDialog, QApplication, QMessageBox, QListWidget, QListWidgetItem
 from PyQt5.uic import loadUi
 from Pyro4 import Daemon, Proxy, expose, oneway, callback, locateNS
 from hashlib import md5
@@ -117,25 +117,41 @@ with Daemon() as daemon:
                     #self.para = para
                     super(Chatbox,self).__init__()
                     loadUi("../view/chat.ui",self)
+                    self.user.setText(nome)
+                    
+                    self.listarUser(self)
                     self.pushButton.clicked.connect(self.message)
-                    #self.pushButton_2.clicked.connect(self.LogOut)
+                    self.pushButton_2.clicked.connect(self.logOut)
+                    #self.buttonArq.clicked.connect(self.enviaArquivo)
+
+                def listarUser(self, lista):
+                    lista = ['user 2', 'user 3']
+                    for users in lista:
+                        usuario = self.listWidget.addItem(users)
+                    self.listWidget.itemClicked.connect(self.getItem)
+
+                def getItem(self, itm):
+                    self.para = itm.text()
 
                 def message(self):
                     de = self.nome
-                    para = input("Digite para quem vai a msg: ")
                     msg = self.lineEdit.text()
+                    self.chatBox.append(de + ": " + msg)
+                    #server.mandarMensagem(de, self.para, msg)
                     
-                    #server.mandarMensagem(de, para, msg)
                     
-                    self.chatBox.setText(de + ":" + msg)
                     #user = Proxy(cliente.uriUser)
                     #for arq in user.get_mensagens():
                     #    msgs = server.carregarMensagens(arq)
+
+
+                def recebeMessage(self):
+                    return 0
                             
-                #def logOut(self):
-                #    login = Login()
-                #    widget.addWidget(login)
-                #    widget.setCurrentIndex(widget.currentIndex()+1)
+                def logOut(self):
+                    login = Login()
+                    widget.addWidget(login)
+                    widget.setCurrentIndex(widget.currentIndex()+1)
 
             app=QApplication(sys.argv)
             mainwindow=Login()
