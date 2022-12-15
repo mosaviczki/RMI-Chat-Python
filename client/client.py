@@ -134,10 +134,9 @@ with Daemon() as daemon:
                     self.para = itm.text()
 
                 def message(self):
-                    de = self.nome
                     msg = self.lineEdit.text()
-                    self.chatBox.append(de + ": " + msg)
-                    #server.mandarMensagem(de, self.para, msg)
+                    self.chatBox.append(self.nome + ": " + msg)
+                    #server.mandarMensagem(self.nome, self.para, msg)
                     
                     
                     #user = Proxy(cliente.uriUser)
