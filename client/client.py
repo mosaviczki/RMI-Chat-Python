@@ -39,6 +39,7 @@ with Daemon() as daemon:
     with Proxy("PYRONAME:RMI") as server:
 
         cliente = None
+        user = None
 
         while True: 
             print("--------------------------------")
@@ -87,15 +88,15 @@ with Daemon() as daemon:
 
             if option == 3:
                 
-                callback = cliente
                 para = input("Digite para quem vai a msg: ")
                 msg = input('Digite a msg: ')
                 
-                server.mandarMensagem(callback.uri, para, msg)
+                server.mandarMensagem(user, para, msg)
 
             if option == 4:
                 user = Proxy('PYRO:obj_bda543333b3643a2b25f46eaf9a25b02@localhost:38505')
                 print(user.hello())
 
             if option == 5:
+                print(user)
                 server.printAllUsers()

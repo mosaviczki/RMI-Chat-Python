@@ -33,6 +33,9 @@ class Usuario():
     def set_p2p(self, p2p):
         self.p2p = p2p
 
+    def update_p2p(self, key, log):
+        self.p2p[key] = log
+
     def get_p2p(self):
         return self.p2p
 
@@ -88,6 +91,10 @@ class Servidor(object):
     grupos = []
 
     def cadastrar_usuario(self, nome, senha):
+        ######### Verificacao ######### 
+        for user in self.usuarios:
+            if nome == user.get_nome(): #Ja esta cadastrado este usuario
+                return None
 
         usuario = Usuario(nome, senha)
         uri = daemon.register(usuario)
@@ -108,6 +115,48 @@ class Servidor(object):
             if nome == user.nome and senha == user.senha:
                 cliente.set_uriUser(user.uri)
 
+
+    def mandarMensagem(self, usuario_manda, nome_recebe, mensagem):
+        usuario_recebe = self.procuraUsuario(nome_recebe)
+
+        if usuario_recebe == None:  # O Usuario de destino nao existe
+            return None
+        
+        horario = datetime.now()
+        horario_str = horario.strftime('%d/%m/%Y %H:%M')
+
+        if usuario_recebe.get_nome() in usuario_manda.get_grupos():    #Esta mandando msg para um grupo
+            dict_aux = usuario_manda.get_grupos()
+
+            with open(dict_aux[usuario_recebe.get_nome()], 'a') as file:
+                file.write(horario_str + '|' + usuario_manda.get_nome() + '|' + mensagem + '\n')
+
+        elif usuario_recebe.get_nome() in usuario_manda.get_p2p():    #Já existe mensagens
+            dict_aux = usuario_manda.get_p2p()
+
+            with open(dict_aux[usuario_recebe.get_nome()], 'a') as file:
+                file.write(horario_str + '|' + usuario_manda.get_nome() + '|' + mensagem + '\n')
+
+        else: #Primeira mensagem
+            hash_msg = md5((usuario_manda.get_nome() + usuario_recebe.get_nome() + horario_str).encode())
+            hash_msg = hash_msg.hexdigest()
+            hash_msg = hash_msg + '.log'
+
+            with open(hash_msg, 'a') as file:
+                file.write(horario_str + '|' + usuario_manda.get_nome() + '|' + mensagem + '\n')
+            
+            usuario_manda.update_p2p(usuario_recebe.get_nome(), hash_msg)
+            usuario_recebe.update_p2p(usuario_manda.get_nome(), hash_msg)
+
+    def criaGrupo(self, usuario, lista_membros, nome_grupo):
+        pass
+
+    def procuraUsuario(self, id):
+        for user in self.usuarios:
+            if id == user.nome:
+                return user
+        return None
+
     def printAllUsers(self):
         for user in self.usuarios:
             self.printUsuario(user)
@@ -125,8 +174,6 @@ ns = locateNS()
 server = Servidor()
 uri = daemon.register(server)
 ns.register("RMI", uri)
-
-print(uri)
 
 daemon.requestLoop()
     
