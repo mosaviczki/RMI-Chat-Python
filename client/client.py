@@ -94,9 +94,10 @@ with Daemon() as daemon:
                 server.mandarMensagem(user, para, msg)
 
             if option == 4:
-                user = Proxy('PYRO:obj_bda543333b3643a2b25f46eaf9a25b02@localhost:38505')
-                print(user.hello())
+                server.criaGrupo(user, True, ['Maycom'], 'UTF')
 
-            if option == 5:
-                print(user)
+            if option == 10:
                 server.printAllUsers()
+
+            if option == 11:
+                server.printAllGroup()
