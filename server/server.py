@@ -309,7 +309,7 @@ class Servidor(object):
         cliente = Proxy(callback)
         grupo = self.procuraGrupo(nome_grupo)
 
-        if grupo.get_adm != cliente.get_nome():
+        if grupo.get_adm() != cliente.get_nome():
 
             usuario = self.procuraUsuario(cliente.get_nome())
             grupo = self.procuraGrupo(nome_grupo)
@@ -439,8 +439,7 @@ class Servidor(object):
     def excluirGrupo(self, callback, nome_grupo):
         
         cliente = Proxy(callback)
-        
-        usuario = self.procuraUsuario(cliente.get_nome())
+
         grupo = self.procuraGrupo(nome_grupo)
 
         if grupo == None:
@@ -532,7 +531,6 @@ class Servidor(object):
 
         nome = cliente.get_nome()
         senha = cliente.get_senha()
-
         
         for user in users:
             user.senha = user.senha.replace('\n', '')
@@ -583,9 +581,70 @@ class Servidor(object):
                 lista.append(grupo.get_nome() + ':' + grupo.get_dir())
 
         return lista
+
+    def sairGrupo(self, callback, nome_grupo):
+        cliente = Proxy(callback)
+        usuario = self.procuraUsuario(cliente.get_nome())
+        grupo = self.procuraGrupo(nome_grupo)
+
+        self.printGrupo(grupo)
+
+        if usuario.get_nome() == grupo.get_adm():   #Cliente é o adm
             
-        
+            file = open('groups.dat', 'r')
+
+            log = file.readlines()
+            line = None
+            n_line = None
+
+            for n_line, x in enumerate(log):
+                if grupo.get_nome() in x:
+                    line = x
+                    break
+
+            line = line.split('|')
+
+            if len(line) == 3: # Só existe o adm no grupo
+                self.excluirGrupo(callback, nome_grupo)
+
+            else:   #Existe mais pessoas no grupo doq so o ADM
+                ################## CACHE ##################
+                line[len(line) -1] = line[len(line) -1].replace('\n', '')   #Removendo \n do ultimo usuario
+
+                grupo.set_adm(
+                    line[(line.index(usuario.get_nome()) + 1)]  #Set como ADM o nome posterior o do antigo adm no 'groups.dat'
+                )
+                
+                (grupo.get_membros()).remove(grupo.get_adm())   #Tirando o novo ADM dos membros
+
+                ################## FILE ##################
+                line.remove(usuario.get_nome())
+                new_line = ('|'.join(str(x) for x in line) ) + '\n'
+
+                self._atualizaLog('groups.dat', n_line, new_line)
     
+
+                self.printGrupo(grupo)
+
+        else:   #Cliente não é o adm
+            pass
+
+    def printGrupo(self, grupo):
+        print(grupo.get_nome())
+        print(grupo.get_dir()) 
+        print(grupo.get_adm())
+        print(grupo.get_membros())
+        print('=========================') 
+    
+    def _atualizaLog(self, arq_nome, linha, string):
+        with open(arq_nome, 'r') as file:
+            linhas = file.readlines()
+            linhas[linha] = string
+
+            arq = open(arq_nome, 'w')
+            arq.writelines(linhas)
+            arq.close()
+
 
 print("[+] Starting server")
 ns = locateNS()
