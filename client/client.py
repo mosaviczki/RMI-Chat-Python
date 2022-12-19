@@ -45,15 +45,6 @@ with Daemon() as daemon:
             print("1-Login")
             print('2-Registrar')
             print('3-Mandar mesagem')
-            '''print('4-Mostrar Cliente')
-            print('5-Carregar mensagens')
-            print('6-Enviar arquivo')
-            print('7-Criar Grupo')
-            print('8-Adicionar novo usuário')
-            print('9-Excluir usuario')
-            print('10 - Excluir Grupo')
-            print('11 - Sair do Grupo')'''
-
             option = int(input(""))
             
             if option == 1:
@@ -83,8 +74,6 @@ with Daemon() as daemon:
 
                     user = Proxy(cliente.uriUser)
 
-                    cnv = user.get_mensagens()
-                    print(cnv)
             
             if option == 2:
 
@@ -103,61 +92,10 @@ with Daemon() as daemon:
                 msg = input('Digite a msg: ')
                 
                 server.mandarMensagem(callback.uri, para, msg)
-'''
-            if option  == 4:
-                if cliente == None:
-                    print("Cliente não logado!")
-                else:
-                    cliente.show()    
 
-            if option == 5:       
-                user = Proxy(cliente.uriUser)
-                for arq in user.get_mensagens():
-                    msgs = server.carregarMensagens(arq)
-                    print(msgs)
+            if option == 4:
+                user = Proxy('PYRO:obj_bda543333b3643a2b25f46eaf9a25b02@localhost:38505')
+                print(user.hello())
 
-            if option == 6:
-
-                nomeFile = input("Nome do arquivo: ")
-
-                arq = open(nomeFile, 'rb')
-
-                arqNome = arq.name
-                arqBuffer = arq.read()
-
-                callback = cliente
-                server.enviarArquivo(callback.uri, arqNome, arqBuffer)
-
-            if option == 7:
-
-                nome = input('Informe o nome do grupo: ')
-
-                callback = cliente
-                server.criaGrupo(callback.uri, ['Maycom'], nome)
-
-            if option == 8:
-                
-                callback = cliente
-                server.addNovoUsuarioGrupo(callback.uri, 'UTF')
-            
-            if option == 9:
-                server.excluirUsuario('Monique', 'UTF')
-
-            if option == 10:
-                callback = cliente
-                nome = input('Informe o nome do grupo: ')
-                server.excluirGrupo(callback.uri, nome)
-
-            if option == 11:
-                callback = cliente
-                nome = input('Informe o nome do grupo: ')
-                server.sairGrupo(callback.uri, nome)
-            
-            if option == 12:
-                server.showGrupos()
-
-            if option == 13:
-                callback = cliente
-                grupos = server.meusGrupos(cliente.uri)
-                print(grupos)
-'''
+            if option == 5:
+                server.printAllUsers()
