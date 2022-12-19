@@ -45,14 +45,14 @@ with Daemon() as daemon:
             print("1-Login")
             print('2-Registrar')
             print('3-Mandar mesagem')
-            print('4-Mostrar Cliente')
+            '''print('4-Mostrar Cliente')
             print('5-Carregar mensagens')
             print('6-Enviar arquivo')
             print('7-Criar Grupo')
             print('8-Adicionar novo usuário')
             print('9-Excluir usuario')
             print('10 - Excluir Grupo')
-            print('11 - Sair do Grupo')
+            print('11 - Sair do Grupo')'''
 
             option = int(input(""))
             
@@ -103,7 +103,7 @@ with Daemon() as daemon:
                 msg = input('Digite a msg: ')
                 
                 server.mandarMensagem(callback.uri, para, msg)
-
+'''
             if option  == 4:
                 if cliente == None:
                     print("Cliente não logado!")
@@ -160,3 +160,4 @@ with Daemon() as daemon:
                 callback = cliente
                 grupos = server.meusGrupos(cliente.uri)
                 print(grupos)
+'''
