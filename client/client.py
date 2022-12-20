@@ -48,6 +48,7 @@ with Daemon() as daemon:
             print('3-Mandar mesagem')
             print('4-Cria Grupo')
             print('5-Add no grupo')
+            print('6-ban usuario')
             option = int(input(""))
             
             if option == 1:
@@ -76,7 +77,6 @@ with Daemon() as daemon:
                     print('[+] Logado!')
 
                     user = Proxy(cliente.uriUser)
-
             
             if option == 2:
 
@@ -103,6 +103,11 @@ with Daemon() as daemon:
                 nome_grupo = input("Digite o nome do Grupo: ")
                 nome = input("Digite o nome que vai add: ")
                 server.addNoGrupo(user, nome, nome_grupo)
+
+            if option == 6:
+                nome_grupo = input("Digite o nome do Grupo: ")
+                nome = input("Digite o nome que vai ban: ")
+                server.banDoGrupo(user, nome, nome_grupo)
 
             if option == 10:
                 server.printAllUsers()

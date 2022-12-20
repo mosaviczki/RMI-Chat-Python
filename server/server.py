@@ -95,7 +95,6 @@ def carregarGrupo():
             list_group = []
 
             for line in file.readlines():
-                print(line)
                 line = line.split('|')
                 group = line[0]
                 adm = line[1]
@@ -314,10 +313,34 @@ class Servidor(object):
         if grupo.get_adm() == adm.get_nome():   #Verifica se é o adm que esta chamando a funcao
             usuario = self.procuraUsuario(usuario_nome)
             if usuario != None: #Caso o usuario exista
+                if usuario.get_nome() in grupo.get_membros():   # O usuario ja esta no grupo
+                    return None
+
                 grupo.update_membros(usuario.get_nome())
                 usuario.update_grupo(grupo.get_nome(), grupo.get_dir())
 
-    
+                self.mandarMensagem(adm, grupo.get_nome(), 'Adicionou ' + usuario_nome)
+
+    def banDoGrupo(self, adm, usuario_nome, grupo_nome):
+        grupo = self.procuraGrupo(grupo_nome)
+
+        if adm.get_nome() == usuario_nome: #O ADM nao pode se banir
+            return None
+
+        if adm.get_nome() == grupo.get_adm():   #Verifica se é ADM
+            if usuario_nome in grupo.get_membros(): #Verifica se o usuario faz parte do grupo
+                aux = grupo.get_membros() #AUX recebe todos os membros
+                print(aux, type(aux))
+                aux.remove(usuario_nome)
+                grupo.set_membros(aux)
+
+                ########### USUARIO ###########
+                usuario = self.procuraUsuario(usuario_nome)
+                aux = usuario.get_grupos()
+                aux.pop(grupo.get_nome())
+                usuario.set_grupos(aux)
+
+                self.mandarMensagem(adm, grupo.get_nome(), 'Baniu ' + usuario_nome)
 
 
     def procuraUsuario(self, id):
