@@ -26,6 +26,15 @@ def salvarUsuario(usuario):
         line = line + '\n'
         file.write(line)
 
+def salvarGrupo(grupo):
+    with open('groups.dat', 'a') as file:
+        line = grupo.get_nome() + ':' + grupo.get_dir() + ':' + str(grupo.get_excluir()) +'|' + grupo.get_adm() + '|'
+        for user in grupo.get_membros():
+            line = line + user + ';'
+
+        line = line + '\n'
+        file.write(line)
+
 def carregarUsuario():
     try:
         with open('users.dat', 'r') as file:
@@ -69,14 +78,58 @@ def carregarUsuario():
                             usuario.update_grupo(grupo[0], grupo[1])
 
                 list_user.append(usuario)
-                print(line, user, p2p, groups)
 
         return list_user
 
     except FileNotFoundError:
         return list()
 
+def carregarGrupo():
+    try:
+        with open('groups.dat', 'r') as file:
+            if len(file.read()) == 0: #Não ha nada no arquivo
+                return list()
+        
+            file.seek(0)
+    
+            list_group = []
 
+            for line in file.readlines():
+                print(line)
+                line = line.split('|')
+                group = line[0]
+                adm = line[1]
+                membros = line[2]
+
+                ########## INIT ##########
+                grupo = None
+                group = group.split(':')
+
+                if group[2] == 'True':
+                    grupo = Grupo(group[0], True)
+                else:
+                    grupo = Grupo(group[0], False)
+                
+                grupo.set_dir(group[1])
+
+                ########## ADM ##########
+                grupo.set_adm(adm)
+
+                ########## MEMBROS ##########
+                if membros != '\n':
+                    membros = membros.split(';')
+
+                    for membro in membros:
+                        if membro != '\n' and membro != '':
+                            grupo.update_membros(membro)
+
+                
+                list_group.append(grupo)
+
+        return list_group
+
+    except FileNotFoundError:
+        return list()
 
 @expose
 class Usuario():
@@ -153,6 +206,9 @@ class Grupo():
     def get_dir(self):
         return self.dir
 
+    def get_excluir(self):
+        return self.excluir
+
     def get_adm(self):
         return self.adm
 
@@ -163,7 +219,7 @@ class Grupo():
 class Servidor(object):
     
     usuarios = carregarUsuario()
-    grupos = []
+    grupos = carregarGrupo()
 
     def cadastrar_usuario(self, nome, senha):
         ######### Verificacao ######### 
@@ -317,5 +373,8 @@ try:    #Apagando DB antigo
     remove('groups.dat')
 except:
     pass
+
 for user in server.usuarios:
     salvarUsuario(user)
+for grupo in server.grupos:
+    salvarGrupo(grupo)
