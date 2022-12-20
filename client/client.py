@@ -1,6 +1,7 @@
 from Pyro4 import Daemon, Proxy, expose, oneway, callback, locateNS
 from hashlib import md5
 import threading, time
+from PyQt5 import uic, QtWidgets
 @expose
 class Cliente(object):
     def __init__(self, nome, senha):
@@ -34,52 +35,118 @@ class Cliente(object):
         print("Uri: ", self.uri)
         print("UriUSer: ", self.uriUser)
 
+
+
+
+def showP2P(p2p):
+    print('P2P')
+
+    for user in p2p:
+        layout.listWidget.addItem(user)
+
+def showMeusGrupos(grupos):
+    print('MeusGrupo')
+
+    for user in grupos:
+        layout.listWidget_2.addItem(user)
+
+def showUsuarios():
+    print('All User')
+    for aux in server.showUsers():
+        layout.listWidget_3.addItem(aux)
+
+def showGrupos():
+    print('All Grupos')
+    for aux in server.showGroups():
+        layout.listWidget_4.addItem(aux)
+
+def CarregarConversa():
+    usuarioDest = layout.listWidget.currentItem().text()
+
+    print(usuarioDest)
+    layout.label_6.setText(usuarioDest)
+
+    aux_dict = user.get_p2p()
+
+    linhas = server.carregarMensagem(aux_dict[usuarioDest])
+
+    layout.listWidget_5.clear()
+
+    for linha in linhas:
+        layout.listWidget_5.addItem(linha)
+    
+
+
 with Daemon() as daemon:
         
     with Proxy("PYRONAME:RMI") as server:
 
-        cliente = None
-        user = None
+        global cliente
+        global user
 
-        while True: 
-            print("--------------------------------")
-            print("1-Login")
-            print('2-Registrar')
-            print('3-Mandar mesagem')
-            print('4-Cria Grupo')
-            print('5-Add no grupo')
-            print('6-ban usuario')
-            print('7-Sair do grupo')
-            print('8-Excluir Grupo')
-            option = int(input(""))
+        app = QtWidgets.QApplication([])
+        layout = uic.loadUi('main.ui')
+
+        server.printAllUsers()
+
+        #while True: 
+        print("--------------------------------")
+        print("1-Login")
+        '''
+        print('2-Registrar')
+        print('3-Mandar mesagem')
+        print('4-Cria Grupo')
+        print('5-Add no grupo')
+        print('6-ban usuario')
+        print('7-Sair do grupo')
+        print('8-Excluir Grupo')
+            #option = int(input(""))
             
-            if option == 1:
+            #if option == 1:
+        '''
+        nome = input("Nome: ")
+        senha = input("Senha: ")
 
-                nome = input("Nome: ")
-                senha = input("Senha: ")
+        senha = md5(senha.encode())
+        senha = senha.hexdigest()
 
-                senha = md5(senha.encode())
-                senha = senha.hexdigest()
+        cliente = Cliente(nome, senha)
 
-                cliente = Cliente(nome, senha)
+        callback = cliente
+        callback.uri = daemon.register(callback)
 
-                callback = cliente
-                callback.uri = daemon.register(callback)
+        loop_thread = threading.Thread(target=callback.request_loop, args=(daemon, ))
+        loop_thread.daemon = False
+        loop_thread.start()
 
-                loop_thread = threading.Thread(target=callback.request_loop, args=(daemon, ))
-                loop_thread.daemon = False
-                loop_thread.start()
+        server.login(callback.uri)
 
-                server.login(callback.uri)
-
-                if cliente.uriUser == None:
-                    print('[-] Senha incorreta')
-                    
-                else:
-                    print('[+] Logado!')
-
-                    user = Proxy(cliente.uriUser)
+        if cliente.uriUser == None:
+            print('[-] Senha incorreta')
             
+        else:
+            print('[+] Logado!')
+
+            user = Proxy(cliente.uriUser)
+
+            layout.label.setText('Olá, ' + user.get_nome())
+
+            showP2P(user.get_p2p())
+            showMeusGrupos(user.get_grupos())
+            showUsuarios()
+            showGrupos()
+
+            print(user)
+
+            layout.listWidget.itemClicked.connect(CarregarConversa)
+
+            
+
+            layout.show()
+            app.exec()
+
+        
+        '''
             if option == 2:
 
                 nome = input("Digite seu nome: ")
@@ -124,3 +191,5 @@ with Daemon() as daemon:
 
             if option == 11:
                 server.printAllGroup()
+            '''
+            
