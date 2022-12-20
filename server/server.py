@@ -137,6 +137,7 @@ class Usuario():
         self.uri = None
         self.nome = nome
         self.senha = senha
+        self.loged = False
         self.p2p = dict()
         self.grupos = dict()
 
@@ -151,6 +152,12 @@ class Usuario():
 
     def get_senha(self):
         return self.senha
+
+    def set_loged(self, opt):
+        self.loged = opt
+
+    def get_loged(self):
+        return self.loged
     
     def set_p2p(self, p2p):
         self.p2p = p2p
@@ -243,7 +250,16 @@ class Servidor(object):
             user.senha = user.senha.replace('\n', '')
 
             if nome == user.nome and senha == user.senha:
+                user.set_loged(True)
                 cliente.set_uriUser(user.uri)
+
+    def logout(self, callback):
+        cliente = Proxy(callback)
+        cliente.set_uriUser(None)
+
+        usuario = self.procuraUsuario(cliente.get_nome())
+        usuario.set_loged(False)
+
 
     def mandarMensagem(self, usuario_manda, nome_recebe, mensagem):
         horario = datetime.now()
@@ -433,7 +449,6 @@ class Servidor(object):
         print('ADM: ', grupo.get_adm())
         print('Mebros: ', grupo.get_membros())
          
-    
 
 print("[+] Starting server")
 ns = locateNS()
@@ -442,7 +457,6 @@ uri = daemon.register(server)
 ns.register("RMI", uri)
 
 daemon.requestLoop()
-
 
 try:    #Apagando DB antigo
     remove('users.dat')
