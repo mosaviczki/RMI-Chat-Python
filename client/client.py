@@ -46,6 +46,8 @@ with Daemon() as daemon:
             print("1-Login")
             print('2-Registrar')
             print('3-Mandar mesagem')
+            print('4-Cria Grupo')
+            print('5-Add no grupo')
             option = int(input(""))
             
             if option == 1:
@@ -94,7 +96,13 @@ with Daemon() as daemon:
                 server.mandarMensagem(user, para, msg)
 
             if option == 4:
-                server.criaGrupo(user, True, ['Maycom'], 'UTF')
+                nome = input("Digite o nome do Grupo: ")
+                server.criaGrupo(user, True, [], nome)
+
+            if option == 5:
+                nome_grupo = input("Digite o nome do Grupo: ")
+                nome = input("Digite o nome que vai add: ")
+                server.addNoGrupo(user, nome, nome_grupo)
 
             if option == 10:
                 server.printAllUsers()

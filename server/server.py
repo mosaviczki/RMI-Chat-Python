@@ -7,6 +7,77 @@ import threading
 
 daemon = Daemon()
 
+def salvarUsuario(usuario):
+    with open('users.dat', 'a') as file:
+        line = usuario.get_nome() + ':' + usuario.get_senha() + '|'
+
+        aux = usuario.get_p2p()
+
+        for user in aux:
+            line = line + user + ':' + aux[user] + ';'
+
+        line = line + '|'
+
+        aux = usuario.get_grupos()
+
+        for grupos in aux:
+            line = line + grupos + ':' + aux[grupos] + ';'
+
+        line = line + '\n'
+        file.write(line)
+
+def carregarUsuario():
+    try:
+        with open('users.dat', 'r') as file:
+            if len(file.read()) == 0: #Não ha nada no arquivo
+                return list()
+        
+            file.seek(0)
+    
+            list_user = []
+
+            for line in file.readlines():
+                line = line.split('|')
+                user = line[0]
+                p2p = line[1]
+                groups = line[2]
+
+                ########## Nome e Senha ##########
+                user = user.split(':') 
+                usuario = Usuario(user[0], user[1])
+                uri = daemon.register(usuario)
+                usuario.set_uri(uri)
+
+                ########## P2P ##########
+                if p2p != '':   #caso nao seja vazio
+                    p2p = p2p.split(';')
+
+                    for user in p2p:
+                        user = user.split(':')
+
+                        if len(user) != 1:  #Verifica se não é vazio
+                            usuario.update_p2p(user[0], user[1])
+
+                ########## GRUPOS ##########
+                if groups != '\n':  #Caso nao pertença a nenhum grupo
+                    groups = groups.split(';')
+
+                    for grupo in groups:
+                        grupo = grupo.split(':')
+
+                        if len(grupo) != 1:  #Verifica se não é vazio
+                            usuario.update_grupo(grupo[0], grupo[1])
+
+                list_user.append(usuario)
+                print(line, user, p2p, groups)
+
+        return list_user
+
+    except FileNotFoundError:
+        return list()
+
+
+
 @expose
 class Usuario():
 
@@ -16,7 +87,6 @@ class Usuario():
         self.senha = senha
         self.p2p = dict()
         self.grupos = dict()
-
 
     def set_uri(self, uri):
         self.uri = uri
@@ -92,7 +162,7 @@ class Grupo():
 @expose
 class Servidor(object):
     
-    usuarios = []
+    usuarios = carregarUsuario()
     grupos = []
 
     def cadastrar_usuario(self, nome, senha):
@@ -176,17 +246,22 @@ class Servidor(object):
         usuario.update_grupo(grupo.get_nome(), grupo.get_dir())
 
         for membro in lista_membros:
-            self.addNoGrupo(usuario, membro, grupo)
+            self.addNoGrupo(usuario, membro, grupo.get_nome())
 
         self.grupos.append(grupo)
 
-    def addNoGrupo(self, adm, usuario_nome, grupo):
-        print('Add No Grupo')
+    def addNoGrupo(self, adm, usuario_nome, grupo_nome):
+        grupo = self.procuraGrupo(grupo_nome)
+        if grupo == None:   #Verifica se o grupo existe
+            return None
+
         if grupo.get_adm() == adm.get_nome():   #Verifica se é o adm que esta chamando a funcao
             usuario = self.procuraUsuario(usuario_nome)
             if usuario != None: #Caso o usuario exista
                 grupo.update_membros(usuario.get_nome())
                 usuario.update_grupo(grupo.get_nome(), grupo.get_dir())
+
+    
 
 
     def procuraUsuario(self, id):
@@ -235,4 +310,12 @@ uri = daemon.register(server)
 ns.register("RMI", uri)
 
 daemon.requestLoop()
-    
+
+print('\n[+] Salvando usuarios')
+try:    #Apagando DB antigo
+    remove('users.dat')
+    remove('groups.dat')
+except:
+    pass
+for user in server.usuarios:
+    salvarUsuario(user)
