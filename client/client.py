@@ -49,6 +49,8 @@ with Daemon() as daemon:
             print('4-Cria Grupo')
             print('5-Add no grupo')
             print('6-ban usuario')
+            print('7-Sair do grupo')
+            print('8-Excluir Grupo')
             option = int(input(""))
             
             if option == 1:
@@ -97,7 +99,7 @@ with Daemon() as daemon:
 
             if option == 4:
                 nome = input("Digite o nome do Grupo: ")
-                server.criaGrupo(user, True, [], nome)
+                server.criaGrupo(user, False, [], nome)
 
             if option == 5:
                 nome_grupo = input("Digite o nome do Grupo: ")
@@ -108,6 +110,14 @@ with Daemon() as daemon:
                 nome_grupo = input("Digite o nome do Grupo: ")
                 nome = input("Digite o nome que vai ban: ")
                 server.banDoGrupo(user, nome, nome_grupo)
+
+            if option == 7:
+                nome_grupo = input("Digite o nome do Grupo: ")
+                server.sairDoGrupo(user, nome_grupo)
+
+            if option == 8:
+                nome_grupo = input("Digite o nome do Grupo: ")
+                server.excluirGrupo(user, nome_grupo)
 
             if option == 10:
                 server.printAllUsers()

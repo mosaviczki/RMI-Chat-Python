@@ -335,7 +335,6 @@ class Servidor(object):
         if adm.get_nome() == grupo.get_adm():   #Verifica se é ADM
             if usuario_nome in grupo.get_membros(): #Verifica se o usuario faz parte do grupo
                 aux = grupo.get_membros() #AUX recebe todos os membros
-                print(aux, type(aux))
                 aux.remove(usuario_nome)
                 grupo.set_membros(aux)
 
@@ -347,13 +346,34 @@ class Servidor(object):
 
                 self.mandarMensagem(adm, grupo.get_nome(), 'Baniu ' + usuario_nome)
 
-    def sairDoGrupo(self, adm, grupo_nome):
+    def sairDoGrupo(self, usuario, grupo_nome):
         grupo = self.procuraGrupo(grupo_nome)
 
-        if adm.get_nome() == grupo.get_adm():   #O ADM esta saindo do grupo
+        if usuario.get_nome() == grupo.get_adm():   #O ADM esta saindo do grupo
             if grupo.get_excluir(): #Caso esteja configurada a opção excluir quando o ADM sair
-                #self.excluirGrupo()
-                pass
+                self.excluirGrupo(usuario, grupo.get_nome())
+            
+            else:   #Escolhe um novo ADM
+                if grupo.get_membros(): #Verifica se ha algum membro
+                    aux = list(grupo.get_membros())
+                    grupo.set_adm(aux[0])   #Set ADM o primeiro da lista de membros
+                    aux = set(aux)
+                    aux.remove(grupo.get_adm())   #Remove a lista de membros o novo ADM
+
+                    grupo.set_membros(aux)
+
+                else:   #Caso não haver nenhum membro exclua o grupo
+                    self.excluirGrupo(usuario, grupo.get_nome())
+        else:   #Um membro esta saindo do grupo
+            self.mandarMensagem(usuario, grupo.get_nome(), 'Saiu do grupo!')
+            aux = usuario.get_grupos()
+            aux.pop(grupo.get_nome())
+            usuario.set_grupos(aux)
+
+            aux = grupo.get_membros() 
+            aux.remove(usuario.get_nome())
+            grupo.set_membros(aux)
+
 
     def excluirGrupo(self, adm, grupo_nome):
         grupo = self.procuraGrupo(grupo_nome)
@@ -376,7 +396,6 @@ class Servidor(object):
 
         self.grupos.remove(grupo)
         
-
     def procuraUsuario(self, id):
         for user in self.usuarios:
             if id == user.nome:
