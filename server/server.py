@@ -290,6 +290,10 @@ class Servidor(object):
         horario = datetime.now()
         horario_str = horario.strftime('%d/%m/%Y %H:%M')
 
+        grupo = self.procuraGrupo(nome_grupo)
+        if grupo != None:   #Um grupo ja existe com este nome
+            return None
+
         grupo = Grupo(nome_grupo, opt)
 
         hash_dir = md5((nome_grupo + horario_str).encode())
@@ -302,8 +306,9 @@ class Servidor(object):
 
         for membro in lista_membros:
             self.addNoGrupo(usuario, membro, grupo.get_nome())
-
+        
         self.grupos.append(grupo)
+        self.mandarMensagem(usuario, grupo.get_nome(), 'Criou o Grupo!')
 
     def addNoGrupo(self, adm, usuario_nome, grupo_nome):
         grupo = self.procuraGrupo(grupo_nome)
@@ -342,6 +347,35 @@ class Servidor(object):
 
                 self.mandarMensagem(adm, grupo.get_nome(), 'Baniu ' + usuario_nome)
 
+    def sairDoGrupo(self, adm, grupo_nome):
+        grupo = self.procuraGrupo(grupo_nome)
+
+        if adm.get_nome() == grupo.get_adm():   #O ADM esta saindo do grupo
+            if grupo.get_excluir(): #Caso esteja configurada a opção excluir quando o ADM sair
+                #self.excluirGrupo()
+                pass
+
+    def excluirGrupo(self, adm, grupo_nome):
+        grupo = self.procuraGrupo(grupo_nome)
+
+        if adm.get_nome() != grupo.get_adm():  #Não é o ADM que esta pedindo a exclusão
+            return None
+
+        for membro in grupo.get_membros():  # Removendo todos os membros
+            ########### USUARIO ###########
+            usuario = self.procuraUsuario(membro)
+            aux = usuario.get_grupos()
+            aux.pop(grupo.get_nome())
+            usuario.set_grupos(aux)
+        
+        aux = adm.get_grupos()
+        aux.pop(grupo.get_nome())
+        adm.set_grupos(aux)
+
+        remove(grupo.get_dir()) #Apaga o arquivo log
+
+        self.grupos.remove(grupo)
+        
 
     def procuraUsuario(self, id):
         for user in self.usuarios:
@@ -390,14 +424,16 @@ ns.register("RMI", uri)
 
 daemon.requestLoop()
 
-print('\n[+] Salvando usuarios')
+
 try:    #Apagando DB antigo
     remove('users.dat')
     remove('groups.dat')
 except:
     pass
-
+print('\n[+] Salvando usuarios')
 for user in server.usuarios:
     salvarUsuario(user)
+
+print('[+] Salvando grupos')
 for grupo in server.grupos:
     salvarGrupo(grupo)
