@@ -47,7 +47,7 @@ with Daemon() as daemon:
 
         while True: 
             class Login(QDialog):
-                def __init__(self):
+                def __init__(self): #Carrega a tela de login
                     super(Login, self).__init__()
                     loadUi("../view/login.ui", self)
                     self.buttonEntrar.clicked.connect(self.logIn)
@@ -70,16 +70,14 @@ with Daemon() as daemon:
 
                     server.login(callback.uri)
 
-                    print(cliente.get_uriUser())
-
-                    if cliente.get_uriUser() == None:
+                    if cliente.uriUser == None:
                         QMessageBox.about(self, "Error", "Usuario ou senha inválida!")
                     else:
-                        telaChat = Chatbox(nome, cliente)
+                        user = Proxy(cliente.uriUser)
+                        telaChat = Chatbox(nome, user)
                         widget.addWidget(telaChat)
                         widget.setCurrentIndex(widget.currentIndex()+1)
                     
-
                 def cadastrarClient(self): #Direcionara para o cadastro
                     createClient = Cadastrar()
                     widget.addWidget(createClient)
@@ -87,7 +85,7 @@ with Daemon() as daemon:
                 
             ############ CADASTRO DE NOVO USUARIO ############
             class Cadastrar(QDialog):
-                def __init__(self):
+                def __init__(self):#Carrega a tela de cadastro
                     super(Cadastrar,self).__init__()
                     loadUi("../view/cadastro.ui",self)
                     self.pushButton.clicked.connect(self.createClientFunction)
@@ -105,126 +103,77 @@ with Daemon() as daemon:
                     else:
                         QMessageBox.about(self, "Error", "As senhas devem ser iguais!")              
                 
-                def voltar(self):
+                def voltar(self):#Volta para pagina de login
                     login = Login()
                     widget.addWidget(login)
                     widget.setCurrentIndex(widget.currentIndex()+1)
                         
-
+            ############ CHAT DO USUARIO ############
             class Chatbox(QDialog):
-                def __init__(self, nome, cliente):
+                def __init__(self, nome, user):#Carrega tela do chat
                     super(Chatbox,self).__init__()
                     self.nome = nome
-                    self.cliente = cliente 
+                    self.user = user 
                     loadUi("../view/chat.ui",self)
-                    self.user.setText(nome)
-                    self.listarUser()
-                    self.grupos()
-                    self.pushButton_2.clicked.connect(self.logOut)
+                    self.listarUsuario()
+                    self.listarGrupo()
+                    self.pushButton.clicked.connect(self.logOut)
                     self.buttonGroup.clicked.connect(self.carregaTelaGrupo)
                 
-                def listarUser(self):
+                def listarUsuario(self):
                     lista = []
-                    for users in server.showUser():
+                    for users in server.printAllUsers():
                         if users != self.nome:
                             if users != None:
                                 lista.append(users)
                     for u in lista:
                         usuario = self.listWidget.addItem(u)
-
                     self.listWidget.itemClicked.connect(self.getItem)
 
-                def getItem(self, itm):
-                    usuarioDest = itm.text()
-                    self.carregaMensagem(usuarioDest)
-                    self.message(usuarioDest)
-                    
-                    
-                def carregaMensagem(self, usuarioDest):
-                    user = Proxy(self.cliente.uriUser)
-                    if usuarioDest is not False:
-                        self.usuarioDest = usuarioDest
-                        aux = [self.nome, self.usuarioDest]
-                        aux.sort()
-                        aux = aux[0] + aux[1]
-                        aux = md5(aux.encode())
-                        aux = aux.hexdigest()
-                        aux = aux + '.log'
-                        existe = os.path.exists('../server/{}'.format(aux))
-                        print(existe)
-                        if existe == True:
-                            for arq in user.get_mensagens():
-                                self.chatBox.setText('')
-                                msgs = server.carregarMensagens(aux)
-                                if msgs:
-                                    for x in range(len(msgs)):          
-                                        self.chatBox.append(msgs[x])
-                
-                def carregaMsgGrupo(self, usuarioDest):
-                    user = Proxy(self.cliente.uriUser)
-                    if usuarioDest is not False:
-                        self.usuarioDest = usuarioDest
-                        existe = os.path.exists('../server/{}'.format(self.usuarioDest))
-                        if existe == True:
-                            for arq in user.get_mensagens():
-                                self.chatBox.setText('')
-                                msgs = server.carregarMensagens(self.usuarioDest)
-                                if msgs:
-                                    for x in range(len(msgs)):          
-                                        self.chatBox.append(msgs[x])
-            
-                def grupos(self):
-                    callback = self.cliente
-                    grupos = server.meusGrupos(callback.uri)
-                    for id in grupos:
-                        grp = id.split(":")
-                        self.listWidget_2.addItem(grp[0])
-                    self.listWidget_2.itemClicked.connect(self.getItemGroup)
-                
-                def verifica(self, nomeGrupo):
-                    arq = open("../server/groups.dat", "r")
-                    for i in arq:
-                        if nomeGrupo in i:
-                            lista = i.split("|")
-                            self.carregaMsgGrupo(lista[1])
-                        else:
-                            pass
+                def getItemU(self, itm):
+                    userDest = itm.text()
+                    self.mandarMensagem(userDest)
 
-                def getItemGroup(self, itm):
+                def listarGrupo(self):
+                    lista = []
+                    for users in server.printAllUsers():
+                        if users != self.nome:
+                            if users != None:
+                                lista.append(users)
+                    for u in lista:
+                        usuario = self.listWidget.addItem(u)
+                    self.listWidget.itemClicked.connect(self.getItem)
+
+                def getItemG(self, itm):
                     grupo = itm.text()
-                    #self.carregaMensagem(usuarioDest)
-                    self.verifica(grupo)
-                    self.messageGroup(grupo)
+                    self.mandarMensagemGrupo(grupo)
 
-                def message(self, usuarioDest):
+                def mandarMensagem(self, dest):
                     msg = self.lineEdit.text()
-                    
-                    callback = self.cliente
                     if msg:
-                        print("MSG1: ",msg)
                         self.chatBox.append(self.nome +": "+msg)
-                        server.mandarMensagem(callback.uri, usuarioDest, msg)
+                        server.mandarMensagem(self.user, dest, msg)
                 
-                def messageGroup(self, grupo):
+                def mandarMensagemGrupo(self, grupo):
                     msg = self.lineEdit.text()
-                    callback = self.cliente
                     if msg:
-                        print(msg)
                         self.chatBox.append(self.nome +": "+msg)
-                        server.mandarMensagem(callback.uri, grupo, msg)
-                        if msg == "/delete":
-                            server.excluirGrupo(callback.uri, grupo)
-                            QMessageBox.about(self, "Sucess", "Grupo excluido com sucessoo!")
+                        server.mandarMensagem(self.user, grupo, msg)
+                        if msg == "/deleteGroup":
+                            server.excluirGrupo(self.user, grupo)
+                            QMessageBox.about(self, "Sucess", "Grupo {} deletado!".format(grupo))
+                        if "/add" in msg:
+                            msgUser = msg.split(' ')
+                            userAdd = msgUser[1]
+                            server.addNoGrupo(self.user, userAdd, grupo)
                         if "/ban" in msg:
                             msgUser = msg.split(' ')
-                            user = msgUser[1]
-                            server.excluirUsuario(user, grupo)
-                            QMessageBox.about(self, "Sucess", "{} excluido com sucesso do grupo {}".format(user, grupo))      
-                        #if "/add" in msg:
-                        #    msgUser = msg.split(' ')
-                        #    user = msgUser[1]
-                        #    server.excluirUsuario(user, grupo)
-
+                            userBan = msgUser[1]
+                            server.banDoGrupo(self.user, userBan, grupo)
+                            QMessageBox.about(self, "Sucess", "{} excluido com sucesso do grupo {}".format(user, grupo))
+                        if msg == "/sair":
+                            server.sairDoGrupo(self.user,grupo)
+                            QMessageBox.about(self, "Sucess", "Você saiu do grupo {}".format(grupo))
 
                 def carregaTelaGrupo(self):
                     group= Group(self.nome, self.cliente)
@@ -235,12 +184,12 @@ with Daemon() as daemon:
                     login = Login()
                     widget.addWidget(login)
                     widget.setCurrentIndex(widget.currentIndex()+1)
-
+                
             class Group(QDialog):
-                def __init__(self, nome, cliente):
+                def __init__(self, nome, user):
                     super(Group,self).__init__()
                     self.nome = nome
-                    self.cliente = cliente 
+                    self.user = user
                     widget.setFixedWidth(570)
                     widget.setFixedHeight(406)
                     loadUi("../view/grupo.ui",self)
@@ -250,8 +199,7 @@ with Daemon() as daemon:
                     nomeGrupo = self.lineEdit.text()
                     nUsuario = self.lineEdit_2.text()
                     listaUsuario = nUsuario.split(',')
-                    callback = self.cliente
-                    server.criaGrupo(callback.uri, listaUsuario, nomeGrupo)
+                    server.criaGrupo(self.user, False, listaUsuario, nomeGrupo)
                 
                 def voltar(self):
                     chat = Chatbox()
@@ -275,101 +223,17 @@ with Daemon() as daemon:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             """
             print("--------------------------------")
-            print("1-Login")
-            print('2-Registrar')
             print('3-Mandar mesagem')
             print('4-Cria Grupo')
             print('5-Add no grupo')
-            print('6-ban usuario')
-            print('7-Sair do grupo')
-            print('8-Excluir Grupo')
-            option = int(input(""))
-            
-            if option == 1:
 
-                nome = input("Nome: ")
-                senha = input("Senha: ")
-
-                senha = md5(senha.encode())
-                senha = senha.hexdigest()
-
-                cliente = Cliente(nome, senha)
-
-                callback = cliente
-                callback.uri = daemon.register(callback)
-
-                loop_thread = threading.Thread(target=callback.request_loop, args=(daemon, ))
-                loop_thread.daemon = False
-                loop_thread.start()
-
-                server.login(callback.uri)
-
-                if cliente.uriUser == None:
-                    print('[-] Senha incorreta')
-                    
-                else:
-                    print('[+] Logado!')
-
-                    user = Proxy(cliente.uriUser)
-            
-            if option == 2:
-
-                nome = input("Digite seu nome: ")
-                senha = input("Digite sua senha: ")
-
-                senha = md5(senha.encode())
-                senha = senha.hexdigest()   #Transformando em string 
-
-                server.cadastrar_usuario(nome, senha)
-
-            if option == 3:
-                
-                para = input("Digite para quem vai a msg: ")
-                msg = input('Digite a msg: ')
-                
-                server.mandarMensagem(user, para, msg)
-
-            if option == 4:
-                nome = input("Digite o nome do Grupo: ")
-                server.criaGrupo(user, False, [], nome)
 
             if option == 5:
                 nome_grupo = input("Digite o nome do Grupo: ")
                 nome = input("Digite o nome que vai add: ")
                 server.addNoGrupo(user, nome, nome_grupo)
-
-            if option == 6:
-                nome_grupo = input("Digite o nome do Grupo: ")
-                nome = input("Digite o nome que vai ban: ")
-                server.banDoGrupo(user, nome, nome_grupo)
-
-            if option == 7:
-                nome_grupo = input("Digite o nome do Grupo: ")
-                server.sairDoGrupo(user, nome_grupo)
-
-            if option == 8:
-                nome_grupo = input("Digite o nome do Grupo: ")
-                server.excluirGrupo(user, nome_grupo)
 
             if option == 10:
                 server.printAllUsers()
