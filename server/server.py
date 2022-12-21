@@ -435,10 +435,19 @@ class Servidor(object):
             self.printGrupo(grupo)
 
     def printUsuario(self, usuario):
-        return usuario.get_nome()
+        print('-------------------------')
+        print('URI: ', usuario.get_uri())
+        print('Nome: ', usuario.get_nome())
+        print('Senha: ', usuario.get_senha())
+        print('P2P: ', usuario.get_p2p())
+        print('GRUPOS: ', usuario.get_grupos())
     
     def printGrupo(self, grupo):
-        return grupo.get_nome()
+        print('=========================')
+        print('Nome: ', grupo.get_nome())
+        print('Dir: ', grupo.get_dir()) 
+        print('ADM: ', grupo.get_adm())
+        print('Mebros: ', grupo.get_membros())
          
 
 print("[+] Starting server")
