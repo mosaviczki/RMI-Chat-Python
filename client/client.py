@@ -153,8 +153,16 @@ with Daemon() as daemon:
                     grupo = itm.text()
                     self.mandarMensagemGrupo(grupo)
 
-                #def carregarMsgP2P(slef):
-                #def carregarMsgGrupo(slef):     
+                def carregarMsgP2P(self):
+                    usuarioDest = self.listWidget.currentItem().text()
+                    print(usuarioDest)
+                    self.label_6.setText(usuarioDest)
+                    aux_dict = user.get_p2p()
+                    linhas = server.carregarMensagem(aux_dict[usuarioDest])
+                    self.listWidget_5.clear()
+                    for linha in linhas:
+                        self.listWidget_5.addItem(linha)
+                #def carregarMsgGrupo(self):     
 
                 def mandarMensagem(self, dest):
                     msg = self.lineEdit.text()
