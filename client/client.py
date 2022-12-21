@@ -37,7 +37,7 @@ class Cliente(object):
         print("Senha: ", self.senha)
         print("Uri: ", self.uri)
         print("UriUSer: ", self.uriUser)
-
+        
 with Daemon() as daemon:
         
     with Proxy("PYRONAME:RMI") as server:
@@ -72,12 +72,13 @@ with Daemon() as daemon:
 
                     if cliente.uriUser == None:
                         QMessageBox.about(self, "Error", "Usuario ou senha inválida!")
+                        
                     else:
                         user = Proxy(cliente.uriUser)
                         telaChat = Chatbox(nome, user)
                         widget.addWidget(telaChat)
                         widget.setCurrentIndex(widget.currentIndex()+1)
-                    
+                        
                 def cadastrarClient(self): #Direcionara para o cadastro
                     createClient = Cadastrar()
                     widget.addWidget(createClient)
