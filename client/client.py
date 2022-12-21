@@ -35,9 +35,6 @@ class Cliente(object):
         print("Uri: ", self.uri)
         print("UriUSer: ", self.uriUser)
 
-
-
-
 def showP2P(p2p):
     print('P2P')
 
@@ -60,7 +57,7 @@ def showGrupos():
     for aux in server.showGroups():
         layout.listWidget_4.addItem(aux)
 
-def CarregarConversa():
+def carregarConversaP2P():
     usuarioDest = layout.listWidget.currentItem().text()
 
     print(usuarioDest)
@@ -74,8 +71,32 @@ def CarregarConversa():
 
     for linha in linhas:
         layout.listWidget_5.addItem(linha)
-    
 
+def carregarConversaGrupo():
+    usuarioDest = layout.listWidget_2.currentItem().text()
+
+    print(usuarioDest)
+    layout.label_6.setText(usuarioDest)
+
+    aux_dict = user.get_grupos()
+
+    linhas = server.carregarMensagem(aux_dict[usuarioDest])
+
+    layout.listWidget_5.clear()
+
+    for linha in linhas:
+        layout.listWidget_5.addItem(linha)
+
+def mandarMensagem():
+    usuarioDest = layout.label_6.text()
+    print(usuarioDest)
+
+    msg = layout.lineEdit.text()
+    print(msg)
+
+    server.mandarMensagem(user, usuarioDest, msg)
+    
+    layout.lineEdit.setText('')
 
 with Daemon() as daemon:
         
@@ -87,7 +108,7 @@ with Daemon() as daemon:
         app = QtWidgets.QApplication([])
         layout = uic.loadUi('main.ui')
 
-        server.printAllUsers()
+        #server.printAllUsers()
 
         #while True: 
         print("--------------------------------")
@@ -138,12 +159,16 @@ with Daemon() as daemon:
 
             print(user)
 
-            layout.listWidget.itemClicked.connect(CarregarConversa)
-
             
+            layout.listWidget.itemClicked.connect(carregarConversaP2P)
+            layout.listWidget_2.itemClicked.connect(carregarConversaGrupo)
+            layout.pushButton.clicked.connect(mandarMensagem)
+
 
             layout.show()
             app.exec()
+
+            server.logout(cliente.get_uri())
 
         
         '''

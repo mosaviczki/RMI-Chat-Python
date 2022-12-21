@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>WhatsUT</string>
+   <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label">
@@ -99,26 +99,6 @@
      </rect>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidget_3">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>360</y>
-      <width>290</width>
-      <height>131</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="listWidget_4">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>510</y>
-      <width>290</width>
-      <height>141</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QListWidget" name="listWidget_5">
     <property name="geometry">
      <rect>
@@ -155,14 +135,37 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>350</x>
       <y>30</y>
-      <width>401</width>
+      <width>701</width>
       <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string>$conversa</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>360</y>
+      <width>291</width>
+      <height>131</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget_4">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>510</y>
+      <width>291</width>
+      <height>131</height>
+     </rect>
     </property>
    </widget>
   </widget>

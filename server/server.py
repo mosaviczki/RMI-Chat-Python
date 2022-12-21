@@ -3,7 +3,7 @@ from serpent import tobytes
 from datetime import datetime
 from hashlib import md5
 from os import mkdir, remove
-import threading
+from threading import Thread
 
 daemon = Daemon()
 
@@ -226,6 +226,13 @@ class Servidor(object):
     
     usuarios = carregarUsuario()
     grupos = carregarGrupo()
+    clientes = dict()
+
+    def _atualizaP2P():
+        print("Atualiza")
+        pass
+
+    t_P2P = Thread(target=_atualizaP2P, name='P2P')
 
     def cadastrar_usuario(self, nome, senha):
         ######### Verificacao ######### 
@@ -253,12 +260,18 @@ class Servidor(object):
                 user.set_loged(True)
                 cliente.set_uriUser(user.uri)
 
+                self.clientes[user.get_nome()] = cliente.get_uri()
+
+                self.t_P2P.start()
+
     def logout(self, callback):
         cliente = Proxy(callback)
         cliente.set_uriUser(None)
 
         usuario = self.procuraUsuario(cliente.get_nome())
         usuario.set_loged(False)
+
+        self.clientes.pop(usuario.get_nome())
 
 
     def mandarMensagem(self, usuario_manda, nome_recebe, mensagem):
@@ -419,7 +432,7 @@ class Servidor(object):
     
     def showUsers(self):
         lista = []
-        for user in self.usuarios:
+        for user in self.usuarios:  
             lista.append(user.get_nome())
 
         return lista
