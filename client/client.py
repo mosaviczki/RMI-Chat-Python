@@ -2,6 +2,7 @@ from Pyro4 import Daemon, Proxy, expose, oneway, callback, locateNS
 from hashlib import md5
 import threading, time
 from PyQt5 import uic, QtWidgets
+from time import sleep
 @expose
 class Cliente(object):
     def __init__(self, nome, senha):
@@ -58,21 +59,32 @@ def showGrupos():
         layout.listWidget_4.addItem(aux)
 
 def carregarConversaP2P():
+    print('Carregar P2P')
     usuarioDest = layout.listWidget.currentItem().text()
-
     print(usuarioDest)
     layout.label_6.setText(usuarioDest)
 
-    aux_dict = user.get_p2p()
+    print('WHILE')
 
-    linhas = server.carregarMensagem(aux_dict[usuarioDest])
+    threading.Thread(target=msg).start()
 
-    layout.listWidget_5.clear()
+def msg():
 
-    for linha in linhas:
-        layout.listWidget_5.addItem(linha)
+    while True:
+        print(msg)
+        aux_dict = user.get_p2p()
+        usuarioDest = layout.label_6.text()
+        print(usuarioDest)
+        linhas = server.carregarMensagem(aux_dict[usuarioDest])
+
+        layout.listWidget_5.clear()
+
+        for linha in linhas:
+            layout.listWidget_5.addItem(linha)
+        time.sleep(1)
 
 def carregarConversaGrupo():
+    print('Carregar Grupo')
     usuarioDest = layout.listWidget_2.currentItem().text()
 
     print(usuarioDest)
@@ -98,15 +110,47 @@ def mandarMensagem():
     
     layout.lineEdit.setText('')
 
+def tela():
+
+    app = QtWidgets.QApplication([])
+    global layout
+    layout = uic.loadUi('main.ui')
+    
+    #loop = threading.Thread(target=refresh)
+    #loop.start()
+    refresh()
+
+    layout.show()
+    app.exec()
+
+    server.logout(cliente.get_uri())
+
+def refresh():
+
+
+    layout.label.setText('Olá, ' + user.get_nome())
+
+    showP2P(user.get_p2p())
+    showMeusGrupos(user.get_grupos())
+    showUsuarios()
+    showGrupos()
+
+    print(user)
+    
+    layout.listWidget.itemClicked.connect(carregarConversaP2P)
+    layout.listWidget_2.itemClicked.connect(carregarConversaGrupo)
+    layout.pushButton.clicked.connect(mandarMensagem)
+    time.sleep(0.5)
+
+
+
+
 with Daemon() as daemon:
         
     with Proxy("PYRONAME:RMI") as server:
 
         global cliente
         global user
-
-        app = QtWidgets.QApplication([])
-        layout = uic.loadUi('main.ui')
 
         #server.printAllUsers()
 
@@ -150,25 +194,8 @@ with Daemon() as daemon:
 
             user = Proxy(cliente.uriUser)
 
-            layout.label.setText('Olá, ' + user.get_nome())
+            tela()
 
-            showP2P(user.get_p2p())
-            showMeusGrupos(user.get_grupos())
-            showUsuarios()
-            showGrupos()
-
-            print(user)
-
-            
-            layout.listWidget.itemClicked.connect(carregarConversaP2P)
-            layout.listWidget_2.itemClicked.connect(carregarConversaGrupo)
-            layout.pushButton.clicked.connect(mandarMensagem)
-
-
-            layout.show()
-            app.exec()
-
-            server.logout(cliente.get_uri())
 
         
         '''
