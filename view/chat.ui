@@ -59,7 +59,7 @@ border-bottom-color: rgb(199, 199, 199);</string>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>1780</x>
+      <x>1790</x>
       <y>20</y>
       <width>91</width>
       <height>41</height>
@@ -334,6 +334,27 @@ font: 75 16pt &quot;Candara&quot;;</string>
      <string>ENVIAR</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>396</x>
+      <y>30</y>
+      <width>1471</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);
+font: 75 14pt &quot;Candara&quot;;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <zorder>label</zorder>
    <zorder>widget</zorder>
    <zorder>lineEdit</zorder>
    <zorder>pushButton</zorder>
@@ -343,22 +364,5 @@ font: 75 16pt &quot;Candara&quot;;</string>
   </widget>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>listWidget</sender>
-   <signal>clicked(QModelIndex)</signal>
-   <receiver>lineEdit</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>195</x>
-     <y>306</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1130</x>
-     <y>880</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

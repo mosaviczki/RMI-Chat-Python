@@ -97,7 +97,6 @@ with Daemon() as daemon:
                         senha = self.lineEdit_2.text()
                         senha = md5(senha.encode())
                         senha = senha.hexdigest()   #Transformando em string 
-                        print(nome, senha)
                         server.cadastrar_usuario(nome, senha)
                         QMessageBox.about(self, "Sucess", "Cliente cadastrado com sucesso!")                   
                     else:
@@ -117,79 +116,116 @@ with Daemon() as daemon:
                     loadUi("../view/chat.ui",self)
                     widget.setFixedWidth(1900)
                     widget.setFixedHeight(1024)
-                    self.listarConversa(self.user.get_p2p())
-                    self.listarMeusGrupos(self.user.get_grupos())
+                    self.listarConversa()
+                    self.listarMeusGrupos()
                     self.listarUsuario()
                     self.listarGrupo()
                     self.userLabel.setText(self.nome)
                     self.pushButton.clicked.connect(self.logOut)
+                    self.pushButton_2.clicked.connect(self.mandarMensagem)
+
                     self.buttonGroup.clicked.connect(self.carregaTelaGrupo)
                 
-                def listarConversa(self, p2p):
-                    lista = []
-                    for users in p2p:
-                        self.listWidget.addItem(users)      
+                def listarConversa(self):
+                    for users in self.user.get_p2p():
+                        self.listWidget.addItem(users) 
+                    self.listWidget.itemClicked.connect(self.setLabel)
+                    self.listWidget.itemClicked.connect(self.carregarMsgP2P)     
 
-                def listarMeusGrupos(self, grupo):
-                    lista = []
-                    for grp in grupo:
+                def listarMeusGrupos(self):
+                    for grp in self.user.get_grupos():
                         self.listWidget_2.addItem(grp)
+                    self.listWidget_2.itemClicked.connect(self.setLabel)
+                    self.listWidget_2.itemClicked.connect(self.carregarMsgGrupo)
 
                 def listarUsuario(self):
-                    for aux in server.showUsers():
-                        self.listWidget_3.addItem(aux)
-                    self.listWidget.itemClicked.connect(self.getItemU)
+                    lista = []
+                    for users in server.showUsers():
+                        if users != self.nome and users != None:
+                            lista.append(users)
+                    for us in lista:
+                        self.listWidget_3.addItem(us)
+
+                    self.listWidget_3.itemClicked.connect(self.limpaTela)
+                    self.listWidget_3.itemClicked.connect(self.setLabel)
                 
                 def listarGrupo(self):
                     for aux in server.showGroups():
                         self.listWidget_4.addItem(aux)
-                    self.listWidget.itemClicked.connect(self.getItemG)
+                    self.listWidget_4.itemClicked.connect(self.setLabel)
 
-                def getItemU(self, itm):
-                    userDest = itm.text()
-                    self.mandarMensagem(userDest)
-                
-                def getItemG(self, itm):
-                    grupo = itm.text()
-                    self.mandarMensagemGrupo(grupo)
+                def setLabel(self, itm):
+                    dest = itm.text()
+                    self.label.setText(dest)
 
-                def carregarMsgP2P(self):
-                    usuarioDest = self.listWidget.currentItem().text()
-                    print(usuarioDest)
-                    self.label_6.setText(usuarioDest)
-                    aux_dict = user.get_p2p()
-                    linhas = server.carregarMensagem(aux_dict[usuarioDest])
-                    self.listWidget_5.clear()
-                    for linha in linhas:
-                        self.listWidget_5.addItem(linha)
-                #def carregarMsgGrupo(self):     
+                def limpaTela(self):
+                   self.chatBox.setText('')
+
+                def carregarMsgP2P(self , itm):
+                    usuarioDest = self.label.text()
+                    if usuarioDest is not False:
+                        aux_dict = self.user.get_p2p()
+                        existe = os.path.exists('../server/{}'.format(aux_dict[usuarioDest]))
+                        if existe:
+                            self.chatBox.setText('')
+                            for arq in server.carregarMensagem(aux_dict[usuarioDest]):
+                                if arq:
+                                    arq = arq.replace('\n', '')
+                                    arq = arq.split("|")
+                                    data = arq[0]
+                                    nome = arq[1]
+                                    msg = arq[2]
+                                    text = '[' + data + '] ' + nome + ': ' + msg 
+                                    self.chatBox.append(text) 
+
+                def carregarMsgGrupo(self): 
+                    grupo = self.label.text()
+                    if grupo is not False:
+                        aux_dict = self.user.get_grupos()
+                        existe = os.path.exists('../server/{}'.format(aux_dict[grupo]))
+                        if existe:
+                            self.chatBox.setText('')
+                            for arq in server.carregarMensagem(aux_dict[grupo]):
+                                if arq:
+                                    arq = arq.replace('\n', '')
+                                    arq = arq.split("|")
+                                    data = arq[0]
+                                    nome = arq[1]
+                                    msg = arq[2]
+                                    text = '[' + data + '] ' + nome + ': ' + msg 
+                                    self.chatBox.append(text) 
 
                 def mandarMensagem(self, dest):
+                    dest = self.label.text()
                     msg = self.lineEdit.text()
                     if msg:
                         self.chatBox.append(self.nome +": "+msg)
                         server.mandarMensagem(self.user, dest, msg)
-                
-                def mandarMensagemGrupo(self, grupo):
-                    msg = self.lineEdit.text()
-                    if msg:
-                        self.chatBox.append(self.nome +": "+msg)
-                        server.mandarMensagem(self.user, grupo, msg)
                         if msg == "/deleteGroup":
-                            server.excluirGrupo(self.user, grupo)
-                            QMessageBox.about(self, "Sucess", "Grupo {} deletado!".format(grupo))
+                            server.excluirGrupo(self.user, dest)
+                            QMessageBox.about(self, "Sucess", "Grupo {} deletado!".format(dest))
                         if "/add" in msg:
                             msgUser = msg.split(' ')
-                            userAdd = msgUser[1]
-                            server.addNoGrupo(self.user, userAdd, grupo)
+                            if len(msgUser) > 1:
+                                print(len(msgUser))
+                                userAdd = msgUser[1]
+                                server.addNoGrupo(self.user, userAdd, dest)
+                                QMessageBox.about(self, "Sucess", "{} adicionado no grupo {}".format(userAdd,dest))
+                            else:
+                                QMessageBox.about(self, "attention", "Informe o nome de 1 usuario")
                         if "/ban" in msg:
-                            msgUser = msg.split(' ')
-                            userBan = msgUser[1]
-                            server.banDoGrupo(self.user, userBan, grupo)
-                            QMessageBox.about(self, "Sucess", "{} excluido com sucesso do grupo {}".format(user, grupo))
+                            if len(msgUser) > 1:
+                                msgUser = msg.split(' ')
+                                userBan = msgUser[1]
+                                server.banDoGrupo(self.user, userBan, dest)
+                                QMessageBox.about(self, "Sucess", "{} excluido com sucesso do grupo {}".format(userBan, dest))
+                            else:
+                                QMessageBox.about(self, "attention", "Informe o nome de 1 usuario")
                         if msg == "/sair":
-                            server.sairDoGrupo(self.user,grupo)
-                            QMessageBox.about(self, "Sucess", "Você saiu do grupo {}".format(grupo))
+                            server.sairDoGrupo(self.user,dest)
+                            QMessageBox.about(self, "Sucess", "Você saiu do grupo {}".format(dest))
+                        self.lineEdit.setText('')
+                    
 
                 def carregaTelaGrupo(self):
                     group= Group(self.nome, self.user)
