@@ -39,7 +39,7 @@
      <rect>
       <x>390</x>
       <y>840</y>
-      <width>1481</width>
+      <width>1321</width>
       <height>81</height>
      </rect>
     </property>
@@ -297,7 +297,7 @@ font: 16pt &quot;Cambria&quot;;</string>
      </property>
     </widget>
    </widget>
-   <widget class="QLabel" name="user">
+   <widget class="QLabel" name="userLabel">
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -315,11 +315,31 @@ font: 16pt &quot;Cambria&quot;;</string>
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>1724</x>
+      <y>860</y>
+      <width>141</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(64, 56, 147, 0.4);
+border-radius: 10px;
+color: rgb(255, 255, 255);
+font: 75 16pt &quot;Candara&quot;;</string>
+    </property>
+    <property name="text">
+     <string>ENVIAR</string>
+    </property>
+   </widget>
    <zorder>widget</zorder>
    <zorder>lineEdit</zorder>
    <zorder>pushButton</zorder>
    <zorder>chatBox</zorder>
-   <zorder>user</zorder>
+   <zorder>userLabel</zorder>
+   <zorder>pushButton_2</zorder>
   </widget>
  </widget>
  <resources/>

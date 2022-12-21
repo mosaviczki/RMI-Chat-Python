@@ -42,10 +42,9 @@ with Daemon() as daemon:
         
     with Proxy("PYRONAME:RMI") as server:
 
-        cliente = None
-        user = None
-
-        while True: 
+        #while True: 
+            global cliente
+            global user
             class Login(QDialog):
                 def __init__(self): #Carrega a tela de login
                     super(Login, self).__init__()
@@ -114,20 +113,22 @@ with Daemon() as daemon:
                 def __init__(self, nome, user):#Carrega tela do chat
                     super(Chatbox,self).__init__()
                     self.nome = nome
-                    self.user = user 
+                    self.user = user
                     loadUi("../view/chat.ui",self)
-                    self.listarConversa(user.get_p2p())
-                    self.listarMeusGrupos(user.get_grupos())
+                    widget.setFixedWidth(1900)
+                    widget.setFixedHeight(1024)
+                    self.listarConversa(self.user.get_p2p())
+                    self.listarMeusGrupos(self.user.get_grupos())
                     self.listarUsuario()
                     self.listarGrupo()
-                    self.user.setText(self.nome)
+                    self.userLabel.setText(self.nome)
                     self.pushButton.clicked.connect(self.logOut)
                     self.buttonGroup.clicked.connect(self.carregaTelaGrupo)
                 
                 def listarConversa(self, p2p):
                     lista = []
-                    for user in p2p:
-                        self.listWidget.addItem(user)      
+                    for users in p2p:
+                        self.listWidget.addItem(users)      
 
                 def listarMeusGrupos(self, grupo):
                     lista = []
@@ -151,6 +152,9 @@ with Daemon() as daemon:
                 def getItemG(self, itm):
                     grupo = itm.text()
                     self.mandarMensagemGrupo(grupo)
+
+                #def carregarMsgP2P(slef):
+                #def carregarMsgGrupo(slef):     
 
                 def mandarMensagem(self, dest):
                     msg = self.lineEdit.text()
@@ -194,24 +198,31 @@ with Daemon() as daemon:
                     super(Group,self).__init__()
                     self.nome = nome
                     self.user = user
-                    widget.setFixedWidth(570)
-                    widget.setFixedHeight(406)
+                    widget.setFixedWidth(580)
+                    widget.setFixedHeight(490)
                     loadUi("../view/grupo.ui",self)
                     self.pushButton.clicked.connect(self.createGroup)
+                    self.pushButton_2.clicked.connect(self.voltar)
 
                 def createGroup(self):
                     nomeGrupo = self.lineEdit.text()
                     nUsuario = self.lineEdit_2.text()
                     listaUsuario = nUsuario.split(',')
-                    server.criaGrupo(self.user, False, listaUsuario, nomeGrupo)
-                
-                def voltar(self):
-                    chat = Chatbox()
-                    widget.addWidget(chat(self.nome,self.cliente))
-                    widget.setCurrentIndex(widget.currentIndex()+1)
-            
-            
+                    if self.radioButton.isChecked():
+                        server.criaGrupo(self.user, True, listaUsuario, nomeGrupo)
+                        QMessageBox.about(self, "Sucess", "Grupo criado com sucesso!") 
+                    elif self.radioButton_2.isChecked():
+                        server.criaGrupo(self.user, False, listaUsuario, nomeGrupo)
+                        QMessageBox.about(self, "Sucess", "Grupo criado com sucesso!")  
+                    else:
+                        QMessageBox.about(self, "Error", "Deve selecionar 1 opção!") 
 
+                def voltar(self):
+                    chat = Chatbox(self.nome,self.user)
+                    widget.addWidget(chat)
+                    widget.setCurrentIndex(widget.currentIndex()+1)
+                
+            ############# INICIALIZAÇÃO DAS VIEWS #############
             app=QApplication(sys.argv)
             mainwindow=Login()
             widget=QtWidgets.QStackedWidget()
