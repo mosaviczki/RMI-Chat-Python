@@ -411,6 +411,26 @@ class Servidor(object):
         remove(grupo.get_dir()) #Apaga o arquivo log
 
         self.grupos.remove(grupo)
+
+    def carregarMensagem(self, arq_nome):
+        file = open(arq_nome, 'r')
+        lines = file.readlines()
+        return lines
+    
+    def showUsers(self):
+        lista = []
+        for user in self.usuarios:
+            lista.append(user.get_nome())
+
+        return lista
+
+
+    def showGroups(self):
+        lista = []
+        for grupo in self.grupos:
+            lista.append(grupo.get_nome())
+
+        return lista
         
     def procuraUsuario(self, id):
         for user in self.usuarios:

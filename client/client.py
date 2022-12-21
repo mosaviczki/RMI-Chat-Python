@@ -222,25 +222,3 @@ with Daemon() as daemon:
 
 
 
-
-
-
-
-            """
-            print("--------------------------------")
-            print('3-Mandar mesagem')
-            print('4-Cria Grupo')
-            print('5-Add no grupo')
-
-
-            if option == 5:
-                nome_grupo = input("Digite o nome do Grupo: ")
-                nome = input("Digite o nome que vai add: ")
-                server.addNoGrupo(user, nome, nome_grupo)
-
-            if option == 10:
-                server.printAllUsers()
-
-            if option == 11:
-                server.printAllGroup()
-                """

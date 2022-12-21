@@ -89,22 +89,6 @@ color: rgb(255, 255, 255);
 font: 75 16pt &quot;Candara&quot;;</string>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidget">
-    <property name="geometry">
-     <rect>
-      <x>35</x>
-      <y>121</y>
-      <width>321</width>
-      <height>371</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgba(64, 72, 81, 0);
-border-radius: 10px;
-color: rgb(255, 255, 255);
-font: 20pt &quot;Cambria&quot;;</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
@@ -122,64 +106,62 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="user">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>20</y>
+       <x>10</x>
+       <y>10</y>
        <width>311</width>
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Cambria</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">background-color: none;
-font: 20pt &quot;Cambria&quot;;</string>
+font: 16pt &quot;Cambria&quot;;</string>
      </property>
      <property name="text">
-      <string/>
+      <string>CONVERSAS</string>
      </property>
     </widget>
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>460</y>
+       <x>10</x>
+       <y>230</y>
        <width>251</width>
        <height>41</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>12</pointsize>
+       <family>Cambria</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color:None;</string>
+      <string notr="true">background-color:None;
+font: 16pt &quot;Cambria&quot;;</string>
      </property>
      <property name="text">
-      <string>GRUPOS</string>
-     </property>
-    </widget>
-    <widget class="QListWidget" name="listWidget_2">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>520</y>
-       <width>321</width>
-       <height>331</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgba(64, 72, 81, 0);
-border-radius: 10px;
-color: rgb(255, 255, 255);
-font: 20pt &quot;Cambria&quot;;</string>
+      <string>MEUS GRUPOS</string>
      </property>
     </widget>
     <widget class="QPushButton" name="buttonGroup">
      <property name="geometry">
       <rect>
        <x>260</x>
-       <y>460</y>
-       <width>91</width>
-       <height>51</height>
+       <y>230</y>
+       <width>81</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -198,32 +180,131 @@ background-color: None;</string>
       <string>+</string>
      </property>
     </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>450</y>
+       <width>251</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Cambria</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:None;
+font: 16pt &quot;Cambria&quot;;</string>
+     </property>
+     <property name="text">
+      <string>USUARIOS</string>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="listWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>270</y>
+       <width>331</width>
+       <height>181</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(64, 72, 81, 0.7);
+border-radius: 10px;
+color: rgb(255, 255, 255);
+font: 16pt &quot;Cambria&quot;;</string>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="listWidget_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>490</y>
+       <width>331</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(64, 72, 81, 0.7);
+border-radius: 10px;
+color: rgb(255, 255, 255);
+font: 16pt &quot;Cambria&quot;;</string>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="listWidget_4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>690</y>
+       <width>331</width>
+       <height>171</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(64, 72, 81, 0.7);
+border-radius: 10px;
+color: rgb(255, 255, 255);
+font: 16pt &quot;Cambria&quot;;</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>650</y>
+       <width>251</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Cambria</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:None;
+font: 16pt &quot;Cambria&quot;;</string>
+     </property>
+     <property name="text">
+      <string>GRUPOS</string>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="listWidget">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>331</width>
+       <height>171</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(64, 72, 81, 0.7);
+border-radius: 10px;
+color: rgb(255, 255, 255);
+font: 16pt &quot;Cambria&quot;;</string>
+     </property>
+    </widget>
    </widget>
    <zorder>widget</zorder>
    <zorder>lineEdit</zorder>
    <zorder>pushButton</zorder>
    <zorder>chatBox</zorder>
-   <zorder>listWidget</zorder>
   </widget>
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>listWidget_2</sender>
-   <signal>clicked(QModelIndex)</signal>
-   <receiver>lineEdit</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>318</x>
-     <y>699</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>415</x>
-     <y>901</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>listWidget</sender>
    <signal>clicked(QModelIndex)</signal>
