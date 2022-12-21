@@ -208,7 +208,6 @@ with Daemon() as daemon:
                     dest = self.label.text()
                     msg = self.lineEdit.text()
                     if msg:
-                        self.chatBox.append(self.nome +": "+msg)
                         server.mandarMensagem(self.user, dest, msg)
                         if msg == "/deleteGroup":
                             server.excluirGrupo(self.user, dest)
@@ -237,7 +236,7 @@ with Daemon() as daemon:
                     
 
                 def carregaTelaGrupo(self):
-                    group= Group(self.nome, self.user)
+                    group= Group(self.nome, self.user, self.cliente)
                     widget.addWidget(group)
                     widget.setCurrentIndex(widget.currentIndex()+1)
 
@@ -248,10 +247,11 @@ with Daemon() as daemon:
                     widget.setCurrentIndex(widget.currentIndex()+1)
                 
             class Group(QDialog):
-                def __init__(self, nome, user):
+                def __init__(self, nome, user, cliente):
                     super(Group,self).__init__()
                     self.nome = nome
                     self.user = user
+                    self.cliente = cliente
                     widget.setFixedWidth(580)
                     widget.setFixedHeight(490)
                     loadUi("../view/grupo.ui",self)
@@ -272,7 +272,7 @@ with Daemon() as daemon:
                         QMessageBox.about(self, "Error", "Deve selecionar 1 opção!") 
 
                 def voltar(self):
-                    chat = Chatbox(self.nome,self.user)
+                    chat = Chatbox(self.nome,self.user, self.cliente)
                     widget.addWidget(chat)
                     widget.setCurrentIndex(widget.currentIndex()+1)
                 
