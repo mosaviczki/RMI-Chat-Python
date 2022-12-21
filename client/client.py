@@ -115,35 +115,37 @@ with Daemon() as daemon:
                     self.nome = nome
                     self.user = user 
                     loadUi("../view/chat.ui",self)
+                    self.listarConversa(user.get_p2p())
+                    self.listarMeusGrupos(user.get_grupos())
                     self.listarUsuario()
                     self.listarGrupo()
                     self.pushButton.clicked.connect(self.logOut)
                     self.buttonGroup.clicked.connect(self.carregaTelaGrupo)
                 
-                def listarUsuario(self):
+                def listarConversa(self, p2p):
                     lista = []
-                    for users in server.printAllUsers():
-                        if users != self.nome:
-                            if users != None:
-                                lista.append(users)
-                    for u in lista:
-                        usuario = self.listWidget.addItem(u)
-                    self.listWidget.itemClicked.connect(self.getItem)
+                    for user in p2p:
+                        self.listWidget.addItem(user)      
+
+                def listarMeusGrupos(self, grupo):
+                    lista = []
+                    for grp in grupo:
+                        self.listWidget_2.addItem(grp)
+
+                def listarUsuario(self):
+                    for aux in server.showUsers():
+                        self.listWidget_3.addItem(aux)
+                    self.listWidget.itemClicked.connect(self.getItemU)
+                
+                def listarGrupo(self):
+                    for aux in server.showGroups():
+                        self.listWidget_4.addItem(aux)
+                    self.listWidget.itemClicked.connect(self.getItemG)
 
                 def getItemU(self, itm):
                     userDest = itm.text()
                     self.mandarMensagem(userDest)
-
-                def listarGrupo(self):
-                    lista = []
-                    for users in server.printAllUsers():
-                        if users != self.nome:
-                            if users != None:
-                                lista.append(users)
-                    for u in lista:
-                        usuario = self.listWidget.addItem(u)
-                    self.listWidget.itemClicked.connect(self.getItem)
-
+                
                 def getItemG(self, itm):
                     grupo = itm.text()
                     self.mandarMensagemGrupo(grupo)
