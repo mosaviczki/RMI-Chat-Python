@@ -208,7 +208,6 @@ with Daemon() as daemon:
                     dest = self.label.text()
                     msg = self.lineEdit.text()
                     if msg:
-                        self.chatBox.append(self.nome +": "+msg)
                         server.mandarMensagem(self.user, dest, msg)
                         if msg == "/deleteGroup":
                             server.excluirGrupo(self.user, dest)
@@ -234,7 +233,6 @@ with Daemon() as daemon:
                             server.sairDoGrupo(self.user,dest)
                             QMessageBox.about(self, "Sucess", "Você saiu do grupo {}".format(dest))
                         self.lineEdit.setText('')
-                    
 
                 def carregaTelaGrupo(self):
                     group= Group(self.nome, self.user)
