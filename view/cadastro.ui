@@ -251,54 +251,5 @@ border-bottom-color: rgb(199, 199, 199);</string>
   </widget>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>lineEdit_3</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>803</x>
-     <y>845</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>798</x>
-     <y>575</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>lineEdit</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>812</x>
-     <y>825</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>680</x>
-     <y>130</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>lineEdit_2</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>715</x>
-     <y>855</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>690</x>
-     <y>350</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

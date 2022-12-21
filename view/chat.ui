@@ -103,7 +103,7 @@ font: 75 16pt &quot;Candara&quot;;</string>
 border-radius: 10px;
 color: rgb(255, 255, 255);</string>
     </property>
-    <widget class="QLabel" name="user">
+    <widget class="QLabel" name="label_1">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -129,7 +129,7 @@ font: 16pt &quot;Cambria&quot;;</string>
       <string>CONVERSAS</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -180,7 +180,7 @@ background-color: None;</string>
       <string>+</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -254,7 +254,7 @@ color: rgb(255, 255, 255);
 font: 16pt &quot;Cambria&quot;;</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -297,10 +297,29 @@ font: 16pt &quot;Cambria&quot;;</string>
      </property>
     </widget>
    </widget>
+   <widget class="QLabel" name="user">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>25</y>
+      <width>301</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: none;
+color: rgb(255, 255, 255);
+font: 16pt &quot;Cambria&quot;;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
    <zorder>widget</zorder>
    <zorder>lineEdit</zorder>
    <zorder>pushButton</zorder>
    <zorder>chatBox</zorder>
+   <zorder>user</zorder>
   </widget>
  </widget>
  <resources/>
