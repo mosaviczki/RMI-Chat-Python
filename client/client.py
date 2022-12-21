@@ -98,9 +98,9 @@ with Daemon() as daemon:
                         senha = self.lineEdit_2.text()
                         senha = md5(senha.encode())
                         senha = senha.hexdigest()   #Transformando em string 
-
+                        print(nome, senha)
                         server.cadastrar_usuario(nome, senha)
-                        QMessageBox.about(self, "Sucess", "Cliente cadastrado com sucesso!")                          
+                        QMessageBox.about(self, "Sucess", "Cliente cadastrado com sucesso!")                   
                     else:
                         QMessageBox.about(self, "Error", "As senhas devem ser iguais!")              
                 
@@ -120,6 +120,7 @@ with Daemon() as daemon:
                     self.listarMeusGrupos(user.get_grupos())
                     self.listarUsuario()
                     self.listarGrupo()
+                    self.user.setText(self.nome)
                     self.pushButton.clicked.connect(self.logOut)
                     self.buttonGroup.clicked.connect(self.carregaTelaGrupo)
                 
@@ -179,7 +180,7 @@ with Daemon() as daemon:
                             QMessageBox.about(self, "Sucess", "Você saiu do grupo {}".format(grupo))
 
                 def carregaTelaGrupo(self):
-                    group= Group(self.nome, self.cliente)
+                    group= Group(self.nome, self.user)
                     widget.addWidget(group)
                     widget.setCurrentIndex(widget.currentIndex()+1)
 
