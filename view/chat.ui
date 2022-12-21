@@ -109,13 +109,13 @@ color: rgb(255, 255, 255);</string>
        <x>10</x>
        <y>10</y>
        <width>311</width>
-       <height>41</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>Cambria</family>
-       <pointsize>16</pointsize>
+       <pointsize>14</pointsize>
        <weight>50</weight>
        <italic>false</italic>
        <bold>false</bold>
@@ -123,7 +123,7 @@ color: rgb(255, 255, 255);</string>
      </property>
      <property name="styleSheet">
       <string notr="true">background-color: none;
-font: 16pt &quot;Cambria&quot;;</string>
+font: 14pt &quot;Cambria&quot;;</string>
      </property>
      <property name="text">
       <string>CONVERSAS</string>
@@ -133,7 +133,7 @@ font: 16pt &quot;Cambria&quot;;</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>230</y>
+       <y>190</y>
        <width>251</width>
        <height>41</height>
       </rect>
@@ -141,15 +141,15 @@ font: 16pt &quot;Cambria&quot;;</string>
      <property name="font">
       <font>
        <family>Cambria</family>
-       <pointsize>16</pointsize>
+       <pointsize>14</pointsize>
        <weight>50</weight>
        <italic>false</italic>
        <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color:None;
-font: 16pt &quot;Cambria&quot;;</string>
+      <string notr="true">background-color: none;
+font: 14pt &quot;Cambria&quot;;</string>
      </property>
      <property name="text">
       <string>MEUS GRUPOS</string>
@@ -159,7 +159,7 @@ font: 16pt &quot;Cambria&quot;;</string>
      <property name="geometry">
       <rect>
        <x>260</x>
-       <y>230</y>
+       <y>190</y>
        <width>81</width>
        <height>31</height>
       </rect>
@@ -184,33 +184,33 @@ background-color: None;</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>450</y>
-       <width>251</width>
+       <y>410</y>
+       <width>321</width>
        <height>41</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>Cambria</family>
-       <pointsize>16</pointsize>
+       <pointsize>14</pointsize>
        <weight>50</weight>
        <italic>false</italic>
        <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color:None;
-font: 16pt &quot;Cambria&quot;;</string>
+      <string notr="true">background-color: none;
+font: 14pt &quot;Cambria&quot;;</string>
      </property>
      <property name="text">
-      <string>USUARIOS</string>
+      <string>USUARIOS ONLINES</string>
      </property>
     </widget>
     <widget class="QListWidget" name="listWidget_2">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>270</y>
+       <y>230</y>
        <width>331</width>
        <height>181</height>
       </rect>
@@ -226,9 +226,67 @@ font: 16pt &quot;Cambria&quot;;</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>490</y>
+       <y>450</y>
        <width>331</width>
-       <height>161</height>
+       <height>91</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(64, 72, 81, 0.7);
+border-radius: 10px;
+color: rgb(255, 255, 255);
+font: 16pt &quot;Cambria&quot;;</string>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="listWidget_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>710</y>
+       <width>331</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(64, 72, 81, 0.7);
+border-radius: 10px;
+color: rgb(255, 255, 255);
+font: 16pt &quot;Cambria&quot;;</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>680</y>
+       <width>251</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Cambria</family>
+       <pointsize>14</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: none;
+font: 14pt &quot;Cambria&quot;;</string>
+     </property>
+     <property name="text">
+      <string>GRUPOS</string>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="listWidget">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>331</width>
+       <height>151</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -242,9 +300,9 @@ font: 16pt &quot;Cambria&quot;;</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>690</y>
+       <y>580</y>
        <width>331</width>
-       <height>171</height>
+       <height>101</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -258,42 +316,26 @@ font: 16pt &quot;Cambria&quot;;</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>650</y>
-       <width>251</width>
+       <y>540</y>
+       <width>331</width>
        <height>41</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>Cambria</family>
-       <pointsize>16</pointsize>
+       <pointsize>14</pointsize>
        <weight>50</weight>
        <italic>false</italic>
        <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color:None;
-font: 16pt &quot;Cambria&quot;;</string>
+      <string notr="true">background-color: none;
+font: 14pt &quot;Cambria&quot;;</string>
      </property>
      <property name="text">
-      <string>GRUPOS</string>
-     </property>
-    </widget>
-    <widget class="QListWidget" name="listWidget">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>50</y>
-       <width>331</width>
-       <height>171</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgba(64, 72, 81, 0.7);
-border-radius: 10px;
-color: rgb(255, 255, 255);
-font: 16pt &quot;Cambria&quot;;</string>
+      <string>USUARIOS OFFLINES</string>
      </property>
     </widget>
    </widget>

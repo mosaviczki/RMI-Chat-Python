@@ -1,4 +1,5 @@
 import threading, time, sys, os
+from threading import Thread
 from Pyro4 import Daemon, Proxy, expose, oneway, callback, locateNS
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QDialog, QApplication, QMessageBox
@@ -42,7 +43,7 @@ with Daemon() as daemon:
         
     with Proxy("PYRONAME:RMI") as server:
 
-        #while True: 
+        while True: 
             global cliente
             global user
             class Login(QDialog):
@@ -74,7 +75,7 @@ with Daemon() as daemon:
                         
                     else:
                         user = Proxy(cliente.uriUser)
-                        telaChat = Chatbox(nome, user)
+                        telaChat = Chatbox(nome, user, cliente)
                         widget.addWidget(telaChat)
                         widget.setCurrentIndex(widget.currentIndex()+1)
                         
@@ -109,16 +110,18 @@ with Daemon() as daemon:
                         
             ############ CHAT DO USUARIO ############
             class Chatbox(QDialog):
-                def __init__(self, nome, user):#Carrega tela do chat
+                def __init__(self, nome, user,cliente):#Carrega tela do chat
                     super(Chatbox,self).__init__()
                     self.nome = nome
                     self.user = user
+                    self.cliente = cliente
                     loadUi("../view/chat.ui",self)
                     widget.setFixedWidth(1900)
                     widget.setFixedHeight(1024)
                     self.listarConversa()
                     self.listarMeusGrupos()
-                    self.listarUsuario()
+                    self.listarUsuarioOnline()
+                    self.listarUsuarioOffline()
                     self.listarGrupo()
                     self.userLabel.setText(self.nome)
                     self.pushButton.clicked.connect(self.logOut)
@@ -138,9 +141,9 @@ with Daemon() as daemon:
                     self.listWidget_2.itemClicked.connect(self.setLabel)
                     self.listWidget_2.itemClicked.connect(self.carregarMsgGrupo)
 
-                def listarUsuario(self):
+                def listarUsuarioOnline(self):
                     lista = []
-                    for users in server.showUsers():
+                    for users in server.showOnline():
                         if users != self.nome and users != None:
                             lista.append(users)
                     for us in lista:
@@ -148,11 +151,17 @@ with Daemon() as daemon:
 
                     self.listWidget_3.itemClicked.connect(self.limpaTela)
                     self.listWidget_3.itemClicked.connect(self.setLabel)
+
+                def listarUsuarioOffline(self):
+                    for users in server.showOffline():
+                        self.listWidget_4.addItem(users)
+                    self.listWidget_4.itemClicked.connect(self.limpaTela)
+                    self.listWidget_4.itemClicked.connect(self.setLabel)
                 
                 def listarGrupo(self):
                     for aux in server.showGroups():
-                        self.listWidget_4.addItem(aux)
-                    self.listWidget_4.itemClicked.connect(self.setLabel)
+                        self.listWidget_5.addItem(aux)
+                    self.listWidget_5.itemClicked.connect(self.setLabel)
 
                 def setLabel(self, itm):
                     dest = itm.text()
@@ -233,6 +242,7 @@ with Daemon() as daemon:
                     widget.setCurrentIndex(widget.currentIndex()+1)
 
                 def logOut(self):
+                    server.logout(self.cliente.get_uri())
                     login = Login()
                     widget.addWidget(login)
                     widget.setCurrentIndex(widget.currentIndex()+1)
@@ -275,6 +285,9 @@ with Daemon() as daemon:
             widget.setFixedHeight(1024)
             widget.show()
             app.exec_()
+            
+
+            
 
 
 

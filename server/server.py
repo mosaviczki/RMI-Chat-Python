@@ -468,6 +468,24 @@ class Servidor(object):
         print('Dir: ', grupo.get_dir()) 
         print('ADM: ', grupo.get_adm())
         print('Mebros: ', grupo.get_membros())
+
+    ############ ONLINE OU OFFLINE ############
+    def showOnline(self):
+        listaOn = []
+        for user in self.usuarios:
+            if user.get_loged():
+                listaOn.append(user.get_nome())
+        return listaOn
+    
+    def showOffline(self):
+        listaOff = []
+        for user in self.usuarios:
+            if not user.get_loged():
+                listaOff.append(user.get_nome())
+        return listaOff
+                
+
+    #def showOfline(self):
          
 
 print("[+] Starting server")
